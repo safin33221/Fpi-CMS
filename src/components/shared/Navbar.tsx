@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { Button, buttonVariants } from "../ui/button";
+import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
     { label: "Home", href: "/" },
@@ -46,21 +48,30 @@ export default function Navbar() {
 
                 {/* Right Side */}
                 <div className="flex items-center gap-2 sm:gap-3">
-                    <button className="hidden rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium transition hover:bg-slate-100 md:block dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/20">
+                    <Link
+                        href="/login"
+                        className={cn(
+                            buttonVariants({ variant: "outline" }),
+                            "rounded-xl border border-slate-200 bg-background px-4 py-2 text-black"
+                        )}
+                    >
                         Login
-                    </button>
+                    </Link>
 
-                    <button className="rounded-xl px-4 py-2 text-sm  transition  bg-primary text-white ">
+                    <Link
+                        href="/get-start"
+                        className={cn(buttonVariants(), "rounded-xl px-4 py-2 text-sm transition")}
+                    >
                         Get Started
-                    </button>
+                    </Link>
 
                     {/* Mobile Toggle */}
-                    <button
+                    <Button
                         className="rounded-lg p-2 transition hover:bg-slate-100 md:hidden dark:hover:bg-white/10"
                         onClick={() => setMobileOpen(!mobileOpen)}
                     >
                         {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-                    </button>
+                    </Button>
                 </div>
             </div>
 
@@ -84,13 +95,27 @@ export default function Navbar() {
                     ))}
 
                     <div className="flex gap-3 pt-3">
-                        <button className="flex-1 rounded-xl border border-slate-200 py-2 text-sm font-medium dark:border-white/10">
+                        <Link
+                            href="/login"
+                            className={cn(
+                                buttonVariants({ variant: "outline" }),
+                                "flex-1 rounded-xl border border-slate-200 py-2 text-sm font-medium dark:border-white/10"
+                            )}
+                            onClick={() => setMobileOpen(false)}
+                        >
                             Login
-                        </button>
+                        </Link>
 
-                        <button className="flex-1 rounded-xl bg-blue py-2 text-sm font-medium ">
+                        <Link
+                            href="/get-start"
+                            className={cn(
+                                buttonVariants(),
+                                "flex-1 rounded-xl py-2 text-sm font-medium"
+                            )}
+                            onClick={() => setMobileOpen(false)}
+                        >
                             Start
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
