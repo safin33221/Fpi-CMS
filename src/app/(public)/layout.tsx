@@ -1,11 +1,12 @@
+import Navbar from "@/components/shared/Navbar";
 
 export default function layout({ children }: { children: React.ReactNode }) {
     return (
         <div>
             <header>
-                <h1>Navbar</h1>
+                <Navbar />
             </header>
-            <main>
+            <main className="mt-32">
                 {children}
             </main>
             <footer>
