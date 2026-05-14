@@ -27,7 +27,7 @@ export default function Navbar() {
                         <h1 className="text-sm font-bold leading-none lg:text-base">
                             FPI CMS
                         </h1>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground hidden md:block">
                             Campus Management System
                         </p>
                     </div>

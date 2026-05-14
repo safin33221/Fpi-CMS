@@ -65,7 +65,10 @@ export default function RootLayout({
       )}
       style={{ colorScheme: "light" }}
     >
-      <body className="min-h-full flex flex-col bg-white text-neutral-950">
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col bg-white text-neutral-950"
+      >
         {children}
       </body>
     </html>
