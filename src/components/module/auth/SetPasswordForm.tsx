@@ -1,86 +1,166 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useActionState, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { Button } from '@/components/ui/button';
 
-type Props = {
-  loading: boolean;
-  onSubmit: (email: string, password: string) => void | Promise<void>;
+import type { StudentInfo } from '@/types/registration';
+import { registerStudent } from '@/services/auth/registration';
+
+const initialState = {
+  success: false,
+  message: '',
 };
 
-export function SetPasswordForm({ loading, onSubmit }: Props) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+type Props = {
+  studentInfo: StudentInfo | null;
+};
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+export function SetPasswordForm({
+  studentInfo,
+}: Props) {
+  const router = useRouter();
+
+  const [confirmPassword, setConfirmPassword] =
+    useState('');
+
+  const [clientError, setClientError] =
+    useState('');
+
+  const [state, formAction, pending] =
+    useActionState(
+      registerStudent,
+      initialState
+    );
+
+  useEffect(() => {
+    if (state.success) {
+      router.push('/login');
+    }
+  }, [state.success, router]);
+
+  const handleSubmit = (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    const formData = new FormData(
+      event.currentTarget
+    );
+
+    const password = String(
+      formData.get('password')
+    );
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters.');
+      event.preventDefault();
+
+      setClientError(
+        'Password must be at least 6 characters.'
+      );
+
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      event.preventDefault();
+
+      setClientError(
+        'Passwords do not match.'
+      );
+
       return;
     }
 
-    setError('');
-    onSubmit(email, password);
+    setClientError('');
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form
+      action={formAction}
+      onSubmit={handleSubmit}
+      className="space-y-5"
+    >
+      <input
+        type="hidden"
+        name="studentId"
+        value={studentInfo?.studentId ?? ''}
+      />
+
       <label className="block">
-        <span className="text-sm font-medium text-slate-700">Email Address</span>
+        <span className="text-sm font-medium text-slate-700">
+          Email Address
+        </span>
+
         <input
           required
+          name="email"
           type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
           placeholder="you@example.com"
           className="mt-2 h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-primary focus:ring-3 focus:ring-primary/15"
         />
       </label>
 
       <label className="block">
-        <span className="text-sm font-medium text-slate-700">Password</span>
+        <span className="text-sm font-medium text-slate-700">
+          Password
+        </span>
+
         <input
           required
           minLength={6}
+          name="password"
           type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
           placeholder="Create a password"
           className="mt-2 h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-primary focus:ring-3 focus:ring-primary/15"
         />
       </label>
 
       <label className="block">
-        <span className="text-sm font-medium text-slate-700">Confirm Password</span>
+        <span className="text-sm font-medium text-slate-700">
+          Confirm Password
+        </span>
+
         <input
           required
           minLength={6}
           type="password"
           value={confirmPassword}
-          onChange={(event) => setConfirmPassword(event.target.value)}
+          onChange={(event) =>
+            setConfirmPassword(
+              event.target.value
+            )
+          }
           placeholder="Re-enter your password"
           className="mt-2 h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-primary focus:ring-3 focus:ring-primary/15"
         />
       </label>
 
-      {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+      {clientError && (
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+          {clientError}
+        </p>
+      )}
+
+      {!clientError && state.message && (
+        <p
+          className={`rounded-lg px-3 py-2 text-sm ${
+            state.success
+              ? 'bg-green-50 text-green-700'
+              : 'bg-red-50 text-red-700'
+          }`}
+        >
+          {state.message}
+        </p>
       )}
 
       <Button
         type="submit"
-        disabled={loading || !email || !password || !confirmPassword}
+        disabled={pending}
         className="h-11 w-full rounded-lg"
       >
-        {loading ? 'Creating account...' : 'Create Account'}
+        {pending
+          ? 'Creating account...'
+          : 'Create Account'}
       </Button>
     </form>
   );

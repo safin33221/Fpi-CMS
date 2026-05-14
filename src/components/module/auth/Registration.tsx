@@ -85,7 +85,7 @@ export default function Registration() {
   const [step, setStep] = useState<RegistrationStep>('verify');
   const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+
 
   const handleVerificationSuccess = (verifiedStudent: StudentInfo) => {
     setStudentInfo(verifiedStudent);
@@ -97,30 +97,7 @@ export default function Registration() {
     setError(errMsg);
   };
 
-  const handleCreateAccount = async (email: string, password: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      // Call your account creation API/server action
-      // Replace with your actual endpoint
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-          studentInfo, // include the verified student data
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Account creation failed');
-      router.push('/login');
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   const activeStep = steps.find((item) => item.id === step) || steps[0];
   const activeStepIndex = steps.findIndex((item) => item.id === step);
@@ -201,7 +178,7 @@ export default function Registration() {
           )}
 
           {step === 'password' && (
-            <SetPasswordForm loading={loading} onSubmit={handleCreateAccount} />
+            <SetPasswordForm studentInfo={studentInfo} />
           )}
         </div>
       </section>

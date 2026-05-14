@@ -20,7 +20,7 @@ const fields: Array<{
 }> = [
   { name: 'roll', label: 'Roll Number', placeholder: 'Enter board roll', inputMode: 'numeric' },
   { name: 'registrationNo', label: 'Registration Number', placeholder: 'Enter registration number', inputMode: 'numeric' },
-  { name: 'dob', label: 'Date of Birth', placeholder: 'YYYY-MM-DD', type: 'date' },
+  // { name: 'dob', label: 'Date of Birth', placeholder: 'YYYY-MM-DD', type: 'date' },
   { name: 'phone', label: 'Phone Number', placeholder: 'As per institute record', type: 'tel', inputMode: 'tel' },
 ];
 
