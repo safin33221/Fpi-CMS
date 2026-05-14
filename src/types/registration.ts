@@ -6,9 +6,17 @@ export type VerifyStudentPayload = {
 };
 
 export type StudentInfo = {
+  studentId: string;
+  roll: string;
+  registrationNo: string;
+  dob: string;
+  phone: string;
   name: string;
   department: string;
   semester: string;
+  shift?: string;
+  session?: string;
+  technology?: string;
 };
 
 export type VerifyStudentResponse = {
@@ -17,6 +25,9 @@ export type VerifyStudentResponse = {
   name: string;
   department: string;
   semester: string;
+  shift?: string;
+  session?: string;
+  technology?: string;
 };
 
 export type SendOtpPayload = {
@@ -39,7 +50,7 @@ export type VerifyOtpResponse = {
 };
 
 export type RegisterPayload = {
-  verificationToken: string;
+  studentId: string;
   email: string;
   password: string;
 };

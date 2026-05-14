@@ -1,14 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// app/registration/page.tsx
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
-import { OtpVerificationForm } from '@/components/module/auth/OtpVerificationForm';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { SetPasswordForm } from '@/components/module/auth/SetPasswordForm';
 import { VerifyStudentForm } from '@/components/module/auth/VerifyStudentForm';
-import { useRegistration, type RegistrationStep } from '@/hooks/useRegistration';
 import { cn } from '@/lib/utils';
-import type { VerifyStudentPayload } from '@/types/registration';
+import type { StudentInfo } from '@/types/registration';
+
+type RegistrationStep = 'verify' | 'review' | 'password';
 
 const steps: { id: RegistrationStep; title: string; subtitle: string }[] = [
   {
@@ -17,50 +20,114 @@ const steps: { id: RegistrationStep; title: string; subtitle: string }[] = [
     subtitle: 'Enter your institute information to confirm your identity.',
   },
   {
-    id: 'otp',
-    title: 'OTP Verification',
-    subtitle: 'Use the 6-digit code sent to your registered phone number.',
+    id: 'review',
+    title: 'Review Details',
+    subtitle: 'Check the verified student information before continuing.',
   },
   {
     id: 'password',
     title: 'Create Account',
-    subtitle: 'Add your email and password to finish registration.',
+    subtitle: 'Set your email and password to finish registration.',
   },
 ];
 
+const detailLabels: { label: string; value: keyof StudentInfo }[] = [
+  { label: 'Name', value: 'name' },
+  { label: 'Roll', value: 'roll' },
+  { label: 'Registration No', value: 'registrationNo' },
+  { label: 'Date of Birth', value: 'dob' },
+  { label: 'Phone', value: 'phone' },
+  { label: 'Department', value: 'department' },
+  { label: 'Semester', value: 'semester' },
+  { label: 'Shift', value: 'shift' },
+  { label: 'Session', value: 'session' },
+  { label: 'Technology', value: 'technology' },
+  { label: 'Student ID', value: 'studentId' },
+];
+
+function StudentDetails({
+  studentInfo,
+  onBack,
+  onNext,
+}: {
+  studentInfo: StudentInfo;
+  onBack: () => void;
+  onNext: () => void;
+}) {
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-3 sm:grid-cols-2">
+        {detailLabels.map((item) => (
+          <div key={item.value} className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+              {item.label}
+            </p>
+            <p className="mt-1 text-sm font-semibold text-slate-950">
+              {studentInfo[item.value] || 'Not provided'}
+            </p>
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-col-reverse gap-3 sm:flex-row">
+        <Button variant="outline" onClick={onBack} className="h-11 flex-1 rounded-lg">
+          Edit Information
+        </Button>
+        <Button onClick={onNext} className="h-11 flex-1 rounded-lg">
+          Next
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function Registration() {
   const router = useRouter();
-  const [otp, setOtp] = useState('');
-  const {
-    step,
-    studentInfo,
-    loading,
-    error,
-    verifyStudent,
-    verifyOtp,
-    createAccount,
-    backToVerify,
-  } = useRegistration();
+  const [step, setStep] = useState<RegistrationStep>('verify');
+  const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleVerificationSuccess = (verifiedStudent: StudentInfo) => {
+    setStudentInfo(verifiedStudent);
+    setStep('review');
+    setError(null);
+  };
+
+  const handleVerificationError = (errMsg: string) => {
+    setError(errMsg);
+  };
+
+  const handleCreateAccount = async (email: string, password: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      // Call your account creation API/server action
+      // Replace with your actual endpoint
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password,
+          studentInfo, // include the verified student data
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Account creation failed');
+      router.push('/login');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const activeStep = steps.find((item) => item.id === step) || steps[0];
   const activeStepIndex = steps.findIndex((item) => item.id === step);
 
-  const handleVerifyStudent = async (data: VerifyStudentPayload) => {
-    setOtp('');
-    await verifyStudent(data);
-  };
-
-  const handleCreateAccount = async (email: string, password: string) => {
-    const success = await createAccount(email, password);
-
-    if (success) {
-      router.push('/login');
-    }
-  };
-
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10 sm:px-6 lg:px-8">
-      <section className="mx-auto grid min-h-[calc(100vh-5rem)] w-full max-w-7xl items-center gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="mx-auto grid min-h-[calc(100vh-5rem)] w-full max-w-6xl items-center gap-8 lg:grid-cols-[0.85fr_1.15fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-primary">
             FPI CMS Registration
@@ -69,15 +136,14 @@ export default function Registration() {
             Start with a verified student account.
           </h1>
           <p className="mt-4 max-w-md text-sm leading-6 text-slate-600">
-            Complete each step in order. Your OTP is sent automatically after
-            the student record is verified.
+            First verify your student record, then review the details and set
+            your login credentials.
           </p>
 
           <div className="mt-8 space-y-3">
             {steps.map((item, index) => {
               const isComplete = index < activeStepIndex;
               const isActive = item.id === step;
-
               return (
                 <div
                   key={item.id}
@@ -120,17 +186,17 @@ export default function Registration() {
           )}
 
           {step === 'verify' && (
-            <VerifyStudentForm loading={loading} onSubmit={handleVerifyStudent} />
+            <VerifyStudentForm
+              onSuccess={handleVerificationSuccess}
+              onError={handleVerificationError}
+            />
           )}
 
-          {step === 'otp' && (
-            <OtpVerificationForm
-              loading={loading}
-              otp={otp}
+          {step === 'review' && studentInfo && (
+            <StudentDetails
               studentInfo={studentInfo}
-              onBack={backToVerify}
-              onChangeOtp={setOtp}
-              onSubmit={() => verifyOtp(otp)}
+              onBack={() => setStep('verify')}
+              onNext={() => setStep('password')}
             />
           )}
 
