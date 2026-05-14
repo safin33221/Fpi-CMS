@@ -23,7 +23,7 @@ export default function Navbar() {
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3">
 
-                    <div className="hidden sm:block">
+                    <div className="">
                         <h1 className="text-sm font-bold leading-none lg:text-base">
                             FPI CMS
                         </h1>
