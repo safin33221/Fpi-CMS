@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// app/registration/page.tsx
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +7,7 @@ import { SetPasswordForm } from '@/components/module/auth/SetPasswordForm';
 import { VerifyStudentForm } from '@/components/module/auth/VerifyStudentForm';
 import { cn } from '@/lib/utils';
 import type { StudentInfo } from '@/types/registration';
+import Link from 'next/link';
 
 type RegistrationStep = 'verify' | 'review' | 'password';
 
@@ -81,7 +79,7 @@ function StudentDetails({
 }
 
 export default function Registration() {
-  const router = useRouter();
+
   const [step, setStep] = useState<RegistrationStep>('verify');
   const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -104,7 +102,7 @@ export default function Registration() {
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10 sm:px-6 lg:px-8">
-      <section className="mx-auto grid min-h-[calc(100vh-5rem)] w-full max-w-6xl items-center gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+      <section className="mx-auto grid min-h-[calc(100vh-5rem)] w-full max-w-7xl items-center gap-8 lg:grid-cols-[0.85fr_1.15fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-primary">
             FPI CMS Registration
@@ -147,6 +145,9 @@ export default function Registration() {
               );
             })}
           </div>
+          <Link href="/">
+            <Button variant={`outline`} className="h-11 w-full rounded-lg mt-4" size={`lg`} >Back Home</Button>
+          </Link>
         </div>
 
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-xl sm:p-8">
