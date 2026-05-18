@@ -1,4 +1,3 @@
-// components/module/auth/VerifyStudentForm.tsx
 'use client';
 
 import { useActionState, useEffect } from 'react';

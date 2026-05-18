@@ -94,7 +94,7 @@ export function SetPasswordForm({
         <input
           required
           name="email"
-          type="email"
+          type="text"
           placeholder="you@example.com"
           className="mt-2 h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-primary focus:ring-3 focus:ring-primary/15"
         />
