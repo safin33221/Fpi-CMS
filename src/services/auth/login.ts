@@ -1,7 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // services/auth/login.ts
 'use server';
 
 import { serverFetch } from '@/lib/serverFetch';
+import { parse } from 'cookie';
+import { setCookie } from './tokenHandler';
+import { access } from 'fs';
+import { getDefaultCookieOptions } from './cookieOptions';
 
 export const login = async (
     _prevState: unknown,
@@ -11,6 +16,10 @@ export const login = async (
     message: string;
     redirectTo?: string;
 }> => {
+    let accessTokenObject: null | any = null
+    let refreshTokenObject: null | any = null
+
+
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
@@ -23,20 +32,43 @@ export const login = async (
 
     try {
 
-        const response = await serverFetch.post('/auth/login', {
+        const res = await serverFetch.post('/auth/login', {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
         });
 
-        const result = await response.json();
+        const result = await res.json();
 
-        if (!response.ok) {
+        if (!res.ok) {
 
             return {
                 success: false,
-                message: result.message,
+                message: result.message || "Login failed",
             };
         }
+        const setCookieheaders = res.headers.getSetCookie();
+        if (setCookieheaders && setCookieheaders.length > 1) {
+            setCookieheaders.forEach((cookie: string) => {
+                const parseCookie = parse(cookie)
+                if (parseCookie.accessToken) {
+                    accessTokenObject = parseCookie;
+                }
+                if (parseCookie.refreshToken) {
+                    refreshTokenObject = parseCookie;
+                }
+            })
+        } else {
+            throw new Error("Tokens not found in cookies")
+        }
+        // console.log({ accessTokenObject, refreshTokenObject });
+        await setCookie("accessToken", accessTokenObject.accessToken, {
+            ...getDefaultCookieOptions(),
+            maxAge: Number(accessTokenObject["Max-Age"]) || 3600
+        })
+        await setCookie("refreshToken", refreshTokenObject.refreshToken, {
+            ...getDefaultCookieOptions(),
+            maxAge: Number(refreshTokenObject["Max-Age"]) || 7776000
+        })
 
         return {
             success: true,
