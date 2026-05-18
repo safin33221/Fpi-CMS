@@ -1,3 +1,4 @@
+import { cookies } from "next/headers"
 const BackendURL =
     process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -21,6 +22,7 @@ const buildRequestUrl = (endpoint: string): string | null => {
     }
 }
 
+
 const serverFetchHelper = async (
     endpoint: string,
     options: RequestInit,
@@ -29,8 +31,6 @@ const serverFetchHelper = async (
     const requestUrl = buildRequestUrl(endpoint)
 
     if (!requestUrl) {
-        console.error("Server fetch error: Backend URL is missing or invalid")
-
         return new Response(
             JSON.stringify({
                 success: false,
@@ -46,6 +46,8 @@ const serverFetchHelper = async (
     }
 
     try {
+        const cookieStore = await cookies()
+
         const controller = new AbortController()
 
         const timeout = setTimeout(() => {
@@ -57,6 +59,7 @@ const serverFetchHelper = async (
             signal: controller.signal,
             headers: {
                 "Content-Type": "application/json",
+                Cookie: cookieStore.toString(),
                 ...(options.headers ?? {}),
             },
             cache: "no-store",
@@ -64,7 +67,6 @@ const serverFetchHelper = async (
 
         clearTimeout(timeout)
 
-        // Retry once for server errors
         if (allowRetry && response.status >= 500) {
             return serverFetchHelper(endpoint, options, false)
         }
@@ -73,7 +75,6 @@ const serverFetchHelper = async (
     } catch (error) {
         console.error("Server fetch failed:", error)
 
-        // Retry once for network failures
         if (allowRetry) {
             return serverFetchHelper(endpoint, options, false)
         }

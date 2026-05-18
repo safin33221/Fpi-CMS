@@ -5,7 +5,6 @@
 import { serverFetch } from '@/lib/serverFetch';
 import { parse } from 'cookie';
 import { setCookie } from './tokenHandler';
-import { access } from 'fs';
 import { getDefaultCookieOptions } from './cookieOptions';
 
 export const login = async (
