@@ -3,9 +3,27 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import {
+    Bell,
+    ChevronDown,
+    LayoutDashboard,
+    LogOut,
+    Menu,
+    Settings,
+    User,
+    X,
+} from "lucide-react";
+
 import { Button, buttonVariants } from "../ui/button";
 import { cn } from "@/lib/utils";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 const NAV_ITEMS = [
     { label: "Home", href: "/" },
@@ -15,63 +33,182 @@ const NAV_ITEMS = [
     { label: "Contact", href: "/contact" },
 ];
 
-export default function Navbar({ user, hasAuthCookie = false }: {
-    user: any,
-    hasAuthCookie?: boolean
+export default function Navbar({
+    user,
+    hasAuthCookie = false,
+}: {
+    user: any;
+    hasAuthCookie?: boolean;
 }) {
     const [mobileOpen, setMobileOpen] = useState(false);
-    console.log(user, hasAuthCookie);
+
+    const pathname = usePathname();
+
     return (
-        <nav className="fixed top-3 left-1/2 z-50 w-full max-w-7xl -translate-x-1/2 px-3 sm:top-4 sm:px-4 lg:px-6">
-            <div className="flex h-14 items-center justify-between rounded-2xl border border-slate-200/60 bg-white/80 px-4 shadow-lg backdrop-blur-xl sm:h-16 lg:px-6 dark:border-white/10 ">
+        <nav className="fixed left-1/2 top-3 z-50 w-full max-w-7xl -translate-x-1/2 px-3 sm:top-4 sm:px-4 lg:px-6">
+            <div className="flex h-14 items-center justify-between rounded-2xl border border-slate-200 px-4 shadow-lg backdrop-blur-xl sm:h-16 lg:px-6  ">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                        <span className="text-lg font-bold text-primary">
+                            F
+                        </span>
+                    </div>
 
-                    <div className="">
+                    <div>
                         <h1 className="text-sm font-bold leading-none lg:text-base">
                             FPI CMS
                         </h1>
-                        <p className="text-xs text-muted-foreground hidden md:block">
-                            Campus Management System
+
+                        <p className="hidden text-xs text-muted-foreground md:block">
+                            Feni Polytechnic Institute
                         </p>
                     </div>
                 </Link>
 
-                {/* Desktop Menu */}
-                <div className="hidden items-center gap-7 md:flex lg:gap-9">
-                    {NAV_ITEMS.map((item) => (
-                        <Link
-                            key={item.label}
-                            href={item.href}
-                            className="text-lg font-medium text-slate-700 transition hover:text-primary dark:text-slate-300 dark:hover:text-white"
-                        >
-                            {item.label}
-                        </Link>
-                    ))}
+                {/* Desktop Nav */}
+                <div className="hidden items-center gap-2 md:flex lg:gap-3">
+                    {NAV_ITEMS.map((item) => {
+                        const isActive = pathname === item.href;
+
+                        return (
+                            <Link
+                                key={item.label}
+                                href={item.href}
+                                className={cn(
+                                    "rounded-xl px-4 py-2 text-sm font-medium transition",
+                                    isActive
+                                        ? "bg-primary text-white"
+                                        : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10"
+                                )}
+                            >
+                                {item.label}
+                            </Link>
+                        );
+                    })}
                 </div>
 
                 {/* Right Side */}
-                <div className="flex items-center gap-2 sm:gap-3">
-                    <Link
-                        href="/login"
-                        className={cn(
-                            buttonVariants({ variant: "outline" }),
-                            "rounded-xl border border-slate-200 bg-background px-4 py-2 text-black"
-                        )}
-                    >
-                        Login
-                    </Link>
+                <div className="flex items-center gap-2">
+                    {hasAuthCookie && user ? (
+                        <>
+                            {/* Notification */}
+                            <Button
+                                size="icon"
+                                variant="outline"
+                                className="hidden rounded-xl border-slate-200 md:flex "
+                            >
+                                <Bell size={18} />
+                            </Button>
 
-                    <Link
-                        href="/get-start"
-                        className={cn(buttonVariants(), "rounded-xl px-4 py-2 text-sm transition")}
-                    >
-                        Get Started
-                    </Link>
+                            {/* User Dropdown */}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    <Button className="h-11 rounded-xl border border-slate-200 bg-background px-3  ">
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex h-9 w-9 items-center justify-center rounded-full ">
+                                                <span className="text-sm font-semibold text-black">
+                                                    {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                                                </span>
+                                            </div>
+
+                                            <div className="hidden text-left md:block">
+                                                <h3 className="max-w-30 truncate text-sm  text-black font-semibold">
+                                                    {user?.name || "User"}
+                                                </h3>
+
+                                                <p className="text-xs capitalize text-muted-foreground">
+                                                    {user?.role || "Student"}
+                                                </p>
+                                            </div>
+
+                                            <ChevronDown className="text-black" size={16} />
+                                        </div>
+                                    </Button>
+                                </DropdownMenuTrigger>
+
+                                <DropdownMenuContent
+                                    align="end"
+                                    className="w-60 rounded-2xl p-2 bg-white text-black"
+                                >
+                                    {/* User Info */}
+                                    <div className="mb-2 rounded-xl bg-muted/5 p-3">
+                                        <h3 className="truncate text-sm font-semibold">
+                                            {user?.name}
+                                        </h3>
+
+                                        <p className="truncate text-xs ">
+                                            {user?.email}
+                                        </p>
+                                    </div>
+
+                                    <DropdownMenuSeparator />
+
+                                    {/* Dashboard */}
+                                    <Link href="/dashboard">
+                                        <DropdownMenuItem className="mt-1 flex cursor-pointer items-center gap-2 rounded-xl">
+                                            <LayoutDashboard size={16} />
+                                            Dashboard
+                                        </DropdownMenuItem>
+                                    </Link>
+
+                                    {/* Profile */}
+                                    <Link href="/profile">
+                                        <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-xl">
+                                            <User size={16} />
+                                            Profile
+                                        </DropdownMenuItem>
+                                    </Link>
+
+                                    {/* Settings */}
+                                    <Link href="/settings">
+                                        <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-xl">
+                                            <Settings size={16} />
+                                            Settings
+                                        </DropdownMenuItem>
+                                    </Link>
+
+                                    <DropdownMenuSeparator />
+
+                                    {/* Logout */}
+                                    <Link href="/logout">
+                                        <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-xl text-red-500 focus:text-red-500">
+                                            <LogOut size={16} />
+                                            Logout
+                                        </DropdownMenuItem>
+                                    </Link>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </>
+                    ) : (
+                        <>
+                            <Link
+                                href="/login"
+                                className={cn(
+                                    buttonVariants({ variant: "outline" }),
+                                    "rounded-xl border border-slate-200 bg-background px-4 py-2 text-black dark:border-white/10 dark:bg-transparent dark:text-white"
+                                )}
+                            >
+                                Login
+                            </Link>
+
+                            <Link
+                                href="/get-start"
+                                className={cn(
+                                    buttonVariants(),
+                                    "rounded-xl px-4 py-2 text-sm"
+                                )}
+                            >
+                                Get Started
+                            </Link>
+                        </>
+                    )}
 
                     {/* Mobile Toggle */}
                     <Button
-                        className="rounded-lg p-2 transition hover:bg-slate-100 md:hidden dark:hover:bg-white/10"
+                        size="icon"
+                        variant="outline"
+                        className="rounded-xl text-black md:hidden"
                         onClick={() => setMobileOpen(!mobileOpen)}
                     >
                         {mobileOpen ? <X size={20} /> : <Menu size={20} />}
@@ -81,45 +218,72 @@ export default function Navbar({ user, hasAuthCookie = false }: {
 
             {/* Mobile Menu */}
             <div
-                className={`overflow-hidden transition-all duration-500 md:hidden ${mobileOpen
-                    ? "mt-3 max-h-96 opacity-100"
-                    : "max-h-0 opacity-0"
-                    }`}
+                className={cn(
+                    "overflow-hidden transition-all duration-500 md:hidden",
+                    mobileOpen
+                        ? "mt-3 max-h-150 opacity-100"
+                        : "max-h-0 opacity-0"
+                )}
             >
-                <div className="space-y-1 rounded-2xl border border-slate-200/60 bg-white/90 p-4 shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-black/80">
-                    {NAV_ITEMS.map((item) => (
-                        <Link
-                            key={item.label}
-                            href={item.href}
-                            onClick={() => setMobileOpen(false)}
-                            className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-black dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
-                        >
-                            {item.label}
-                        </Link>
-                    ))}
+                <div className="space-y-2 rounded-2xl border border-slate-200/60  p-4 shadow-xl backdrop-blur-xl">
+                   
 
-                    <div className="flex gap-3 pt-3">
-                        <Link
-                            href="/login"
-                            className={cn(
-                                buttonVariants({ variant: "outline" }),
-                                "flex-1 rounded-xl border border-slate-200 py-2 text-sm font-medium dark:border-white/10"
-                            )}
-                            onClick={() => setMobileOpen(false)}
-                        >
-                            Login
-                        </Link>
+                    {/* Mobile Nav */}
+                    {NAV_ITEMS.map((item) => {
+                        const isActive = pathname === item.href;
 
-                        <Link
-                            href="/get-start"
-                            className={cn(
-                                buttonVariants(),
-                                "flex-1 rounded-xl py-2 text-sm font-medium"
-                            )}
-                            onClick={() => setMobileOpen(false)}
-                        >
-                            Start
-                        </Link>
+                        return (
+                            <Link
+                                key={item.label}
+                                href={item.href}
+                                onClick={() => setMobileOpen(false)}
+                                className={cn(
+                                    "block rounded-xl px-4 py-3 text-sm font-medium transition",
+                                    isActive
+                                        ? "bg-primary text-white"
+                                        : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10"
+                                )}
+                            >
+                                {item.label}
+                            </Link>
+                        );
+                    })}
+
+                    {/* Mobile Actions */}
+                    <div className="flex flex-col gap-3 pt-3">
+                        {hasAuthCookie && user ? (
+                            <>
+                               
+
+                               
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    href="/login"
+                                    className={cn(
+                                        buttonVariants({
+                                            variant: "outline",
+                                        }),
+                                        "w-full rounded-xl"
+                                    )}
+                                    onClick={() => setMobileOpen(false)}
+                                >
+                                    Login
+                                </Link>
+
+                                <Link
+                                    href="/get-start"
+                                    className={cn(
+                                        buttonVariants(),
+                                        "w-full rounded-xl"
+                                    )}
+                                    onClick={() => setMobileOpen(false)}
+                                >
+                                    Get Started
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
