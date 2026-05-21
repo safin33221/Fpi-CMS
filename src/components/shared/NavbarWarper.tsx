@@ -10,7 +10,6 @@ export default async function NavbarWarper() {
 
 
     const user = res?.data ?? null
-    console.log("navbar warpper",res);
     const accessToken = await getCookies("accessToken")
     const refreshToken = await getCookies("refreshToken")
     const hasAuthCookie = Boolean(accessToken || refreshToken)

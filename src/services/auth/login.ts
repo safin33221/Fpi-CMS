@@ -6,7 +6,7 @@ import { serverFetch } from '@/lib/serverFetch';
 import { parse } from 'cookie';
 import { setCookie } from './tokenHandler';
 import { getDefaultCookieOptions } from './cookieOptions';
-
+import jwt, { JwtPayload } from "jsonwebtoken";
 export const login = async (
     _prevState: unknown,
     formData: FormData
@@ -69,6 +69,8 @@ export const login = async (
             maxAge: Number(refreshTokenObject["Max-Age"]) || 7776000
         })
 
+        const decodedToken = jwt.decode(accessTokenObject.accessToken) as JwtPayload | string
+        console.log(decodedToken);
         return {
             success: true,
             message: 'Login successful',

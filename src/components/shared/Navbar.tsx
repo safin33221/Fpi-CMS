@@ -24,6 +24,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import LogoutButton from "./logoutButton";
 
 const NAV_ITEMS = [
     { label: "Home", href: "/" },
@@ -129,7 +130,7 @@ export default function Navbar({
 
                                 <DropdownMenuContent
                                     align="end"
-                                    className="w-60 rounded-2xl p-2 bg-white text-black"
+                                    className="w-60 rounded-2xl p-2 bg-white text-black hover:text-black"
                                 >
                                     {/* User Info */}
                                     <div className="mb-2 rounded-xl bg-muted/5 p-3">
@@ -146,8 +147,8 @@ export default function Navbar({
 
                                     {/* Dashboard */}
                                     <Link href="/dashboard">
-                                        <DropdownMenuItem className="mt-1 flex cursor-pointer items-center gap-2 rounded-xl">
-                                            <LayoutDashboard size={16} />
+                                        <DropdownMenuItem className="mt-1 flex cursor-pointer  items-center gap-2 rounded-xl">
+                                            <LayoutDashboard className="" size={16} />
                                             Dashboard
                                         </DropdownMenuItem>
                                     </Link>
@@ -170,13 +171,12 @@ export default function Navbar({
 
                                     <DropdownMenuSeparator />
 
-                                    {/* Logout */}
-                                    <Link href="/logout">
-                                        <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-xl text-red-500 focus:text-red-500">
-                                            <LogOut size={16} />
-                                            Logout
-                                        </DropdownMenuItem>
-                                    </Link>
+
+                                    <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-xl text-red-500 focus:text-red-500">
+                                        <LogOut size={16} />
+                                        <LogoutButton />
+                                    </DropdownMenuItem>
+
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </>
@@ -226,7 +226,7 @@ export default function Navbar({
                 )}
             >
                 <div className="space-y-2 rounded-2xl border border-slate-200/60  p-4 shadow-xl backdrop-blur-xl">
-                   
+
 
                     {/* Mobile Nav */}
                     {NAV_ITEMS.map((item) => {
@@ -253,9 +253,9 @@ export default function Navbar({
                     <div className="flex flex-col gap-3 pt-3">
                         {hasAuthCookie && user ? (
                             <>
-                               
 
-                               
+
+
                             </>
                         ) : (
                             <>
