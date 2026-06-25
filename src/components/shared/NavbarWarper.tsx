@@ -2,11 +2,12 @@
 import { getCookies } from "@/services/auth/tokenHandler";
 
 import Navbar from "./Navbar";
-import { getMe } from "@/services/user/getMe";
+import { myProfile } from "@/services/user/my-profile";
+
 
 
 export default async function NavbarWarper() {
-    const res = await getMe()
+    const res = await myProfile()
 
 
     const user = res?.data ?? null

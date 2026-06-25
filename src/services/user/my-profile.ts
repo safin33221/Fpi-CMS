@@ -1,15 +1,15 @@
 import { serverFetch } from "@/lib/serverFetch"
 
-export const getMe = async () => {
+export const myProfile = async () => {
     try {
-        const res = await serverFetch.get("/user/me")
+        const res = await serverFetch.get("/user/my-profile")
         console.log(res);
         if (!res.ok) {
             return null;
         }
         const result = await res.json()
-        // console.log(result);
-        return result
+        console.log(result);
+        return result.data
     } catch (err) {
         console.log(err);
     }
