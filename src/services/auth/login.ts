@@ -7,14 +7,21 @@ import { parse } from 'cookie';
 import { setCookie } from './tokenHandler';
 import { getDefaultCookieOptions } from './cookieOptions';
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { getDefaultDashboard } from '@/lib/auth-utils';
+import { UserRole } from '@/types/enum';
+import { unstable_rethrow } from 'next/navigation';
+type LoginResponse = {
+    success: boolean;
+    message: string;
+    data?: unknown;
+    redirectTo?: string;
+};
+
+
 export const login = async (
     _prevState: unknown,
     formData: FormData
-): Promise<{
-    success: boolean;
-    message: string;
-    redirectTo?: string;
-}> => {
+): Promise<LoginResponse> => {
     let accessTokenObject: null | any = null
     let refreshTokenObject: null | any = null
 
@@ -70,16 +77,32 @@ export const login = async (
         })
 
         const decodedToken = jwt.decode(accessTokenObject.accessToken) as JwtPayload | string
-        console.log(decodedToken);
+        if (
+            !decodedToken ||
+            typeof decodedToken === "string"
+        ) {
+            throw new Error("Invalid token format");
+        }
+
+
+        const defaultDashboard =
+            getDefaultDashboard(
+                decodedToken.role as UserRole
+            );
+
         return {
             success: true,
-            message: 'Login successful',
+            message: "login success",
+            redirectTo: defaultDashboard,
         };
-    } catch (error) {
+    } catch (error:any) {
+        unstable_rethrow(error);
         console.error('Login error:', error);
+
         return {
             success: false,
-            message: 'something went wrong',
+            message:
+                error?.message || "Login failed",
         };
     }
 }

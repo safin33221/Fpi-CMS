@@ -1,10 +1,29 @@
 "use client"
 import { Button } from "@/components/ui/button";
 import { login } from "@/services/auth/login";
-import { useActionState } from "react";
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect } from "react";
 
 export default function LoginForm() {
-  const [state, formAction, isPending] = useActionState(login, null);
+  const router = useRouter()
+  const [state, formAction, isPending] =
+    useActionState(login, {
+      success: false,
+      message: "",
+    });
+  useEffect(() => {
+    if (
+      state.success &&
+      state.redirectTo
+    ) {
+      router.push(state.redirectTo);
+    }
+  }, [
+    state.success,
+    state.redirectTo,
+    router,
+  ]);
+
   return (
     <form action={formAction} className="space-y-5">
       <div>
