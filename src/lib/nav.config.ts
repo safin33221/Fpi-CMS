@@ -84,31 +84,31 @@ export const adminNavItems: NavSection[] = [
         items: [
             {
                 title: "Departments",
-                href: "/admin/departments",
+                href: "/admin/dashboard/departments",
                 icon: "Building2",
                 roles: [UserRole.ADMIN],
             },
             {
                 title: "Staff",
-                href: "/admin/staff",
+                href: "/admin/dashboard/staff",
                 icon: "Users",
                 roles: [UserRole.ADMIN],
             },
             {
                 title: "Analytics",
-                href: "/admin/analytics",
+                href: "/admin/dashboard/analytics",
                 icon: "BarChart3",
                 roles: [UserRole.ADMIN],
             },
             {
                 title: "Reports",
-                href: "/admin/reports",
+                href: "/admin/dashboard/reports",
                 icon: "FileBarChart",
                 roles: [UserRole.ADMIN],
             },
             {
                 title: "System Settings",
-                href: "/admin/settings",
+                href: "/admin/dashboard/settings",
                 icon: "ShieldCheck",
                 roles: [UserRole.ADMIN],
             },

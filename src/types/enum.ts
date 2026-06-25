@@ -1,4 +1,6 @@
 export enum UserRole {
+  PRINCIPAL = "PRINCIPAL",
+
   ADMIN = "ADMIN",
 
   REGISTRAR = "REGISTRAR",
