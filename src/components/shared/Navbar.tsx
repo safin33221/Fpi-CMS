@@ -37,9 +37,11 @@ const NAV_ITEMS = [
 export default function Navbar({
     user,
     hasAuthCookie = false,
+    defaultDashboard,
 }: {
     user: any;
     hasAuthCookie?: boolean;
+    defaultDashboard: string
 }) {
     console.log({ user, hasAuthCookie });
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -147,7 +149,7 @@ export default function Navbar({
                                     <DropdownMenuSeparator />
 
                                     {/* Dashboard */}
-                                    <Link href="/dashboard">
+                                    <Link href={defaultDashboard}>
                                         <DropdownMenuItem className="mt-1 flex cursor-pointer  items-center gap-2 rounded-xl">
                                             <LayoutDashboard className="" size={16} />
                                             Dashboard
