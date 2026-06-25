@@ -1,4 +1,12 @@
+"use client";
+
+import { useActionState, useState } from "react";
+
+
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
 import {
     Select,
     SelectContent,
@@ -6,24 +14,71 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { IDepartment } from "@/types/department";
-export default function CreateStaffForm({ departments }: { departments: IDepartment[] }) {
- 
+import { Gender, UserRole } from "@/types/enum";
+import { createStaff } from "@/services/staff/createStaff";
+
+const initialState = {
+    success: false,
+    message: "",
+};
+
+export default function CreateStaffForm({
+    departments,
+}: {
+    departments: IDepartment[];
+}) {
+    const [state, formAction, pending] =
+        useActionState(createStaff, initialState);
+
+    const [gender, setGender] =
+        useState<Gender>();
+
+    const [role, setRole] =
+        useState<UserRole>();
+
+    const [departmentId, setDepartmentId] =
+        useState<string | null>(null);
+
     return (
-        <form className="space-y-6">
+        <form
+            action={formAction}
+            className="space-y-6"
+        >
+            <input
+                type="hidden"
+                name="gender"
+                value={gender || ""}
+            />
+
+            <input
+                type="hidden"
+                name="role"
+                value={role || ""}
+            />
+
+            <input
+                type="hidden"
+                name="departmentId"
+                value={departmentId || ""}
+            />
+
             <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                    <Label>
-                        Full Name
-                    </Label>
-                    <Input placeholder="Enter full name" />
+                    <Label>Full Name</Label>
+
+                    <Input
+                        name="name"
+                        placeholder="Enter full name"
+                    />
                 </div>
 
                 <div className="space-y-2">
                     <Label>Email</Label>
+
                     <Input
+                        name="email"
                         type="email"
                         placeholder="Enter email"
                     />
@@ -31,130 +86,194 @@ export default function CreateStaffForm({ departments }: { departments: IDepartm
 
                 <div className="space-y-2">
                     <Label>Phone</Label>
-                    <Input placeholder="Enter phone number" />
+
+                    <Input
+                        name="phone"
+                        placeholder="Enter phone number"
+                    />
                 </div>
+
+                <div className="space-y-2">
+                    <Label>Address</Label>
+
+                    <Input
+                        name="address"
+                        placeholder="Enter address"
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <Label>Gender</Label>
+
+                    <Select
+                        value={gender}
+                        onValueChange={(value) =>
+                            setGender(
+                                value as Gender
+                            )
+                        }
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                            <SelectItem value="MALE">
+                                Male
+                            </SelectItem>
+
+                            <SelectItem value="FEMALE">
+                                Female
+                            </SelectItem>
+
+                            <SelectItem value="OTHER">
+                                Other
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div className="space-y-2">
+                    <Label>Role</Label>
+
+                    <Select
+                        value={role}
+                        onValueChange={(value) =>
+                            setRole(
+                                value as UserRole
+                            )
+                        }
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select role" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                            {Object.values(
+                                UserRole
+                            ).map((role) => (
+                                <SelectItem
+                                    key={role}
+                                    value={role}
+                                >
+                                    {role
+                                        .split("_")
+                                        .map(
+                                            (
+                                                word
+                                            ) =>
+                                                word.charAt(
+                                                    0
+                                                ) +
+                                                word
+                                                    .slice(
+                                                        1
+                                                    )
+                                                    .toLowerCase()
+                                        )
+                                        .join(
+                                            " "
+                                        )}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div className="space-y-2">
+                    <Label>Department</Label>
+
+                    <Select
+                        value={departmentId}
+                        onValueChange={
+                            setDepartmentId
+                        }
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select department" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                            {departments?.map(
+                                (
+                                    department
+                                ) => (
+                                    <SelectItem
+                                        key={
+                                            department.id
+                                        }
+                                        value={
+                                            department.id
+                                        }
+                                    >
+                                        {
+                                            department.name
+                                        }
+                                    </SelectItem>
+                                )
+                            )}
+                        </SelectContent>
+                    </Select>
+                </div>
+
                 <div className="space-y-2">
                     <Label>
-                        Address
+                        Experience
+                        (Years)
                     </Label>
-                    <Input placeholder="Enter address" />
-                </div >
-                <div className="flex justify-between">
-                    <div className="space-y-2">
-                        <Label>Gender</Label>
 
-                        <Select>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select gender" />
-                            </SelectTrigger>
-
-                            <SelectContent>
-                                <SelectItem value="MALE">
-                                    Male
-                                </SelectItem>
-
-                                <SelectItem value="FEMALE">
-                                    Female
-                                </SelectItem>
-
-                                <SelectItem value="OTHER">
-                                    Other
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label>Role</Label>
-
-                        <Select>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select role" />
-                            </SelectTrigger>
-
-                            <SelectContent>
-                                <SelectItem value="TEACHER">
-                                    Teacher
-                                </SelectItem>
-
-                                <SelectItem value="ACCOUNTANT">
-                                    Accountant
-                                </SelectItem>
-
-                                <SelectItem value="REGISTRAR">
-                                    Registrar
-                                </SelectItem>
-
-                                <SelectItem value="LIBRARIAN">
-                                    Librarian
-                                </SelectItem>
-
-                                <SelectItem value="EXAM_CONTROLLER">
-                                    Exam Controller
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label>
-                            Department
-                        </Label>
-
-                        <Select>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select department" />
-                            </SelectTrigger>
-
-                            <SelectContent>
-                                {
-                                    departments?.map(department => (
-                                        <SelectItem key={department.id} value={department.code}>
-                                            {department.name}
-                                        </SelectItem>
-                                    ))
-                                }
-
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label>
-                            Experience (Years)
-                        </Label>
-                        <Input
-                            type="number"
-                            placeholder="0"
-                        />
-                    </div>
-
+                    <Input
+                        name="experienceYears"
+                        type="number"
+                        placeholder="0"
+                    />
                 </div>
 
                 <div className="space-y-2">
                     <Label>
                         Designation
                     </Label>
-                    <Input placeholder="Lecturer, Junior Instructor etc." />
+
+                    <Input
+                        name="designation"
+                        placeholder="Lecturer, Junior Instructor etc."
+                    />
                 </div>
 
                 <div className="space-y-2">
                     <Label>
                         Qualification
                     </Label>
-                    <Input placeholder="BSc, MSc, PhD" />
+
+                    <Input
+                        name="qualification"
+                        placeholder="BSc, MSc, PhD"
+                    />
                 </div>
 
                 <div className="space-y-2">
                     <Label>
                         Joining Date
                     </Label>
-                    <Input type="date" />
+
+                    <Input
+                        name="joiningDate"
+                        type="date"
+                    />
                 </div>
-
-
-
             </div>
+
+            {state.message && (
+                <p
+                    className={`text-sm ${
+                        state.success
+                            ? "text-green-600"
+                            : "text-red-600"
+                    }`}
+                >
+                    {state.message}
+                </p>
+            )}
 
             <div className="flex justify-end gap-2">
                 <Button
@@ -164,10 +283,15 @@ export default function CreateStaffForm({ departments }: { departments: IDepartm
                     Cancel
                 </Button>
 
-                <Button type="submit">
-                    Create Staff
+                <Button
+                    type="submit"
+                    disabled={pending}
+                >
+                    {pending
+                        ? "Creating..."
+                        : "Create Staff"}
                 </Button>
             </div>
         </form>
     );
-};
+}

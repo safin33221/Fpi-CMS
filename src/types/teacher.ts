@@ -1,3 +1,5 @@
+import { IDepartment } from "./department";
+
 export interface ITeacher {
   id: string;
 
@@ -15,5 +17,5 @@ export interface ITeacher {
 
   departmentId: string;
 
-//   department?: IDepartment;
+  department?: IDepartment;
 }

@@ -1,6 +1,10 @@
+import StaffManagement from "@/components/module/admin/staff/StaffManagement";
 import StaffManagementPageHeader from "@/components/module/admin/staff/StaffManagementPageHeader"
+import { getAllStaff } from "@/services/staff/getStaff";
 
-export default function page() {
+export default async function page() {
+    const staffs = await getAllStaff()
+    console.log({ staffs });
     return (
         <div className="space-y-6">
             <StaffManagementPageHeader />
@@ -43,17 +47,10 @@ export default function page() {
                 </div>
             </div>
 
-            <div className="rounded-xl border">
-                <div className="border-b p-4">
-                    <h2 className="font-semibold">
-                        Staff List
-                    </h2>
-                </div>
+            <StaffManagement
 
-                <div className="p-8 text-center text-muted-foreground">
-                    No staff found.
-                </div>
-            </div>
+                staffs={staffs}
+            />
         </div>
     );
 }

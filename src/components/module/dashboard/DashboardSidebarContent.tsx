@@ -86,7 +86,7 @@ export default function DashboardSidebarContent({
     const pathname = usePathname();
 
     return (
-        <aside className="flex h-screen w-62 flex-col border-r bg-background">
+        <aside className="fixed left-0 top-0 h-screen w-64 border-r bg-background">
             {/* Logo */}
             <div className="border-b p-2">
                 <h2 className="text-lg font-bold">
