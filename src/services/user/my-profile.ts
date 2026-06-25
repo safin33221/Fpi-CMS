@@ -3,7 +3,7 @@ import { serverFetch } from "@/lib/serverFetch"
 export const myProfile = async () => {
     try {
         const res = await serverFetch.get("/user/my-profile")
-        console.log(res);
+    
         if (!res.ok) {
             return null;
         }

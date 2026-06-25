@@ -21,7 +21,7 @@ export const verifyStudent = async (
     phone: String(formData.get("phone")),
   }
 
-  console.log({ payload })
+
 
   try {
     const response = await serverFetch.post(
@@ -36,7 +36,6 @@ export const verifyStudent = async (
 
     const data = await response.json()
 
-    console.log({ data })
 
     if (!response.ok) {
       return {

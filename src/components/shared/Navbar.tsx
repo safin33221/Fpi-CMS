@@ -41,6 +41,7 @@ export default function Navbar({
     user: any;
     hasAuthCookie?: boolean;
 }) {
+    console.log({ user, hasAuthCookie });
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const pathname = usePathname();
@@ -105,7 +106,7 @@ export default function Navbar({
                             {/* User Dropdown */}
                             <DropdownMenu>
                                 <DropdownMenuTrigger>
-                                    <Button className="h-11 rounded-xl border border-slate-200 bg-background px-3  ">
+                                    <div className="h-11 rounded-xl border border-slate-200 bg-background px-3  ">
                                         <div className="flex items-center gap-3">
                                             <div className="flex h-9 w-9 items-center justify-center rounded-full ">
                                                 <span className="text-sm font-semibold text-black">
@@ -125,7 +126,7 @@ export default function Navbar({
 
                                             <ChevronDown className="text-black" size={16} />
                                         </div>
-                                    </Button>
+                                    </div>
                                 </DropdownMenuTrigger>
 
                                 <DropdownMenuContent
