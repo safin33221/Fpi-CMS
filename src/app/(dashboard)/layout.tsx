@@ -9,7 +9,7 @@ export default function Layout({
         <div className="flex min-h-screen">
             <DashboardSidebar />
 
-            <main className="flex-1 overflow-auto">
+            <main className="flex-1 overflow-auto mx-3">
                 {children}
             </main>
         </div>

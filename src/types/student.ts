@@ -1,3 +1,6 @@
+import { IDepartment } from "./department";
+import { ISemester } from "./semester";
+
 export interface IStudent {
   id: string;
 
@@ -16,8 +19,8 @@ export interface IStudent {
   departmentId: string;
   semesterId: string;
 
-//   department?: IDepartment;
-//   semester?: ISemester;
+  department?: IDepartment;
+  semester?: ISemester;
 
   createdAt: string;
   updatedAt: string;
