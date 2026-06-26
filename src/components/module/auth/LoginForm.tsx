@@ -33,9 +33,9 @@ export default function LoginForm() {
 
         <input
           required
-          name="email"
+          name="identifier"
           type="text"
-          placeholder="student@fpi.edu"
+          placeholder="LoginId, Email or phone"
           className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none transition-all duration-200 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
         />
       </div>

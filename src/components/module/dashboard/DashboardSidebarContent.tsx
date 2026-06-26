@@ -86,7 +86,7 @@ export default function DashboardSidebarContent({
     const pathname = usePathname();
 
     return (
-        <aside className="fixed left-0 top-0 h-screen w-64 border-r bg-background">
+        <aside className=" fixed left-0 top-0  h-screen w-64 border-r bg-background">
             {/* Logo */}
             <div className="border-b p-2">
                 <h2 className="text-lg font-bold">
@@ -101,7 +101,7 @@ export default function DashboardSidebarContent({
 
 
             {/* Menu */}
-            <div className="flex-1 overflow-y-auto py-4">
+            <div className="flex-1 overflow-y-auto  py-4">
                 {navItems.map((section, sectionIndex) => (
                     <div
                         key={sectionIndex}
@@ -146,7 +146,7 @@ export default function DashboardSidebarContent({
 
             {/* Footer */}
             {/* User */}
-            <div className="border-b p-4">
+            <div className="p-2 border-t fixed bottom-0">
                 <div className="flex items-center gap-3">
                     <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 font-semibold">
                         {userInfo?.name?.charAt(0) ?? "U"}

@@ -26,13 +26,13 @@ export const login = async (
     let refreshTokenObject: null | any = null
 
 
-    const email = formData.get('email') as string;
+    const identifier = formData.get('identifier') as string;
     const password = formData.get('password') as string;
 
-    if (!email || !password) {
+    if (!identifier || !password) {
         return {
             success: false,
-            message: 'Email and password are required.',
+            message: 'LoginId and password are required.',
         };
     }
 
@@ -40,7 +40,7 @@ export const login = async (
 
         const res = await serverFetch.post('/auth/login', {
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ identifier, password }),
         });
 
         const result = await res.json();
@@ -95,7 +95,7 @@ export const login = async (
             message: "login success",
             redirectTo: defaultDashboard,
         };
-    } catch (error:any) {
+    } catch (error: any) {
         unstable_rethrow(error);
         console.error('Login error:', error);
 

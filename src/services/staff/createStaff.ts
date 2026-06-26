@@ -5,10 +5,13 @@
 import { serverFetch } from "@/lib/serverFetch";
 import { unstable_rethrow } from "next/navigation";
 
-type CreateStaffResponse = {
+export type CreateStaffResponse = {
     success: boolean;
     message: string;
-    data?: unknown;
+    data?: {
+        loginId: string;
+        password: string;
+    };
 };
 
 export const createStaff = async (

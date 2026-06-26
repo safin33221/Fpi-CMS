@@ -14,6 +14,8 @@ export interface IDepartment {
     students?: IStudent[];
     teachers?: ITeacher[];
 
+    head?: ITeacher
+
     _count?: {
         students: number;
         teachers: number;

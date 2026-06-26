@@ -44,7 +44,7 @@ export const StaffColumns: columns<IUser>[] = [
                     </p>
 
                     <p className="text-xs text-muted-foreground">
-                        {staff.teacher?.teacherId || "N/A"}
+                        {staff.loginId || "N/A"}
                     </p>
                 </div>
             </div>

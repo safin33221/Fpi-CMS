@@ -6,7 +6,7 @@ export interface IUser {
     id: string;
     name: string;
     email: string;
-
+    loginId: string
     role: UserRole;
 
     isVerified: boolean;

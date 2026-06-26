@@ -16,7 +16,7 @@ export default async function NavbarWarper() {
     const accessToken = await getCookies("accessToken")
     const refreshToken = await getCookies("refreshToken")
     const hasAuthCookie = Boolean(accessToken || refreshToken)
-    const defaultDashboard = getDefaultDashboard(user.role)
+    const defaultDashboard = getDefaultDashboard(user?.role)
 
 
     return (
