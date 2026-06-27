@@ -126,31 +126,37 @@ export const registrarNavItems: NavSection[] = [
         items: [
             {
                 title: "Admissions",
-                href: "/registrar/admissions",
+                href: "/registrar/dashboard/admissions",
                 icon: "UserPlus",
                 roles: [UserRole.REGISTRAR],
             },
             {
                 title: "Students",
-                href: "/registrar/students",
+                href: "/registrar/dashboard/students",
                 icon: "GraduationCap",
                 roles: [UserRole.REGISTRAR],
             },
             {
+                title: "Import Students",
+                href: "/registrar/dashboard/students/import",
+                icon: "Upload",
+                roles: [UserRole.REGISTRAR],
+            },
+            {
                 title: "Registrations",
-                href: "/registrar/registrations",
+                href: "/registrar/dashboard/registrations",
                 icon: "IdCard",
                 roles: [UserRole.REGISTRAR],
             },
             {
                 title: "Semester Promotion",
-                href: "/registrar/promotions",
+                href: "/registrar/dashboard/promotions",
                 icon: "ArrowUpCircle",
                 roles: [UserRole.REGISTRAR],
             },
             {
                 title: "Documents",
-                href: "/registrar/documents",
+                href: "/registrar/dashboard/documents",
                 icon: "FileText",
                 roles: [UserRole.REGISTRAR],
             },

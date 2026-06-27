@@ -1,3 +1,4 @@
+
 import { cookies } from "next/headers"
 const BackendURL =
     process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL
@@ -46,24 +47,31 @@ const serverFetchHelper = async (
     }
 
     try {
-        const cookieStore = await cookies()
+        const cookieStore = await cookies();
 
-        const controller = new AbortController()
+        const controller = new AbortController();
 
         const timeout = setTimeout(() => {
-            controller.abort()
-        }, 15000)
+            controller.abort();
+        }, 15000);
+
+        const headers = new Headers(options.headers);
+
+        headers.set("Cookie", cookieStore.toString());
+
+        if (!(options.body instanceof FormData)) {
+            headers.set(
+                "Content-Type",
+                "application/json"
+            );
+        }
 
         const response = await fetch(requestUrl, {
             ...options,
             signal: controller.signal,
-            headers: {
-                "Content-Type": "application/json",
-                Cookie: cookieStore.toString(),
-                ...(options.headers ?? {}),
-            },
+            headers,
             cache: "no-store",
-        })
+        });
 
         clearTimeout(timeout)
 
