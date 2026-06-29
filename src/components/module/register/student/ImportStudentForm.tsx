@@ -122,7 +122,7 @@ export default function ImportStudentForm() {
 
                     <p className="mt-3 text-xs text-muted-foreground">
                         Supported:
-                        .xlsx / .xls
+                        .xlsx / .xls /.csv
                     </p>
 
                 </div>
@@ -131,7 +131,7 @@ export default function ImportStudentForm() {
                     ref={inputRef}
                     hidden
                     type="file"
-                    accept=".xlsx,.xls"
+                    accept=".xlsx,.xls,.csv"
                     onChange={(e) => {
                         setError("");
 

@@ -40,6 +40,7 @@ import { cn } from "@/lib/utils";
 
 import { NavSection } from "@/types/nav-menu";
 import { IUser } from "@/types/user";
+import LogoutButton from "@/components/shared/logoutButton";
 
 interface Props {
     userInfo: IUser;
@@ -162,6 +163,7 @@ export default function DashboardSidebarContent({
                         </p>
                     </div>
                 </div>
+                <LogoutButton />
             </div>
         </aside>
     );

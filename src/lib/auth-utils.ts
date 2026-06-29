@@ -82,6 +82,7 @@ const isRouteMatches = (
 export const getRouteOwner = (
   pathname: string
 ):
+  | "PRINCIPAL"
   | "ADMIN"
   | "REGISTRAR"
   | "DEPARTMENT_HEAD"
@@ -171,6 +172,8 @@ export const getDefaultDashboard = (
   role: UserRole
 ): string => {
   switch (role) {
+    case "PRINCIPAL":
+      return "/admin/principal";
     case "ADMIN":
       return "/admin/dashboard";
 

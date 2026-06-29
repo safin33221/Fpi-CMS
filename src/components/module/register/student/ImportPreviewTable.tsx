@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import {
     AlertTriangle,
     CheckCircle2,
@@ -12,6 +12,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { IImportPreview } from "@/types/import";
+import { commitImport } from "@/services/student/commitSaveStudent";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type Props = {
     fileId: string;
@@ -47,6 +50,37 @@ export default function ImportPreviewTable({
                     .includes(keyword)
         );
     }, [preview.students, search]);
+
+
+    const router = useRouter();
+
+    const [isPending, startTransition] =
+        useTransition();
+
+    const handleImport = () => {
+        startTransition(async () => {
+            try {
+                const result =
+                    await commitImport(fileId);
+
+                toast.success(
+                    `${result.imported} students imported successfully.`
+                );
+
+                router.push(
+                    "/registrar/dashboard/students"
+                );
+
+                router.refresh();
+            } catch (error) {
+                toast.error(
+                    error instanceof Error
+                        ? error.message
+                        : "Import failed."
+                );
+            }
+        });
+    };
 
     return (
         <div className="space-y-6">
@@ -237,8 +271,16 @@ export default function ImportPreviewTable({
                         </Link>
                     </Button>
 
-                    <Button disabled={preview.validRows === 0}>
-                        Import {preview.validRows} Students
+                    <Button
+                        disabled={
+                            preview.validRows === 0 ||
+                            isPending
+                        }
+                        onClick={handleImport}
+                    >
+                        {isPending
+                            ? "Importing..."
+                            : `Import ${preview.validRows} Students`}
                     </Button>
                 </div>
             </div>

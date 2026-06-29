@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto_Slab } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "react-hot-toast";
 
 const robotoSlab = Roboto_Slab({ subsets: ['latin'], variable: '--font-serif' });
 
@@ -70,6 +71,10 @@ export default function RootLayout({
         className="min-h-full flex flex-col bg-white text-neutral-950"
       >
         {children}
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+        />
       </body>
     </html>
   );

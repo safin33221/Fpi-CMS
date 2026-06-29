@@ -178,7 +178,7 @@ export default function Navbar({
                                     <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-xl text-red-500 focus:text-red-500">
                                         <LogOut size={16} />
                                         <LogoutButton />
-                                    </DropdownMenuItem>
+                                </DropdownMenuItem>
 
                                 </DropdownMenuContent>
                             </DropdownMenu>
