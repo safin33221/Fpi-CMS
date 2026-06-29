@@ -1,10 +1,12 @@
 import { IDepartment } from "./department";
 import { ISemester } from "./semester";
+import { IUser } from "./user";
 
 export interface IStudent {
   id: string;
 
   userId?: string | null;
+  user?: IUser
 
   name: string;
   roll: string;
@@ -19,8 +21,8 @@ export interface IStudent {
   departmentId: string;
   semesterId: string;
 
-  department?: IDepartment;
-  semester?: ISemester;
+  department: IDepartment;
+  semester: ISemester;
 
   createdAt: string;
   updatedAt: string;

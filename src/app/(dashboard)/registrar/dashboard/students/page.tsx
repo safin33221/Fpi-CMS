@@ -1,9 +1,14 @@
+import StudentManagement from "@/components/module/register/student/StudentManagement";
+import StudentManagementHeader from "@/components/module/register/student/StudentManagementHeader";
+import { getAllStudent } from "@/services/student/student";
 
-export default function page() {
+export default async function page() {
+    const students = await getAllStudent()
+    console.log(students);
     return (
         <div>
-            <h1>
-                Students page Component</h1>
+            <StudentManagementHeader />
+            <StudentManagement students={students} />
         </div>
     );
 };

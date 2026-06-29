@@ -29,7 +29,8 @@ export default function ManagementPageHeader({
     return (
         <div
             className="
-            relative overflow-hidden
+            relative
+            overflow-hidden
              border
             bg-linear-to-br
             from-primary/10
@@ -37,6 +38,7 @@ export default function ManagementPageHeader({
             to-primary/5
             p-2 md:p-4
             shadow-sm
+            
         "
         >
             {/* Background Glow */}
