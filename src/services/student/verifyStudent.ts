@@ -25,7 +25,7 @@ export const verifyStudent = async (
 
   try {
     const response = await serverFetch.post(
-      "/students/verify-student",
+      "/student/verify-student",
       {
         body: JSON.stringify(payload),
         headers: {

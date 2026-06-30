@@ -11,7 +11,7 @@ export interface IUser {
 
     isVerified: boolean;
     isActive: boolean;
-
+    mustChangePassword: boolean
     profileImage?: string | null;
 
     gender?: Gender | null;
