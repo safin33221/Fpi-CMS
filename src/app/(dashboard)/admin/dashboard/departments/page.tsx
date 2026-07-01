@@ -5,7 +5,7 @@ import { IDepartment } from "@/types/department";
 
 export default async function Page() {
     const departments: IDepartment[] = await getAllDepartment();
-    console.log(departments);
+
     return (
         <div className="space-y-4">
             <DepartmentManagementHeader />

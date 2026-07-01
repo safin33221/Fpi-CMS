@@ -4,7 +4,6 @@ import { getAllStaff } from "@/services/staff/getStaff";
 
 export default async function page() {
     const staffs = await getAllStaff()
-    console.log({ staffs });
     return (
         <div className="space-y-6">
             <StaffManagementPageHeader />

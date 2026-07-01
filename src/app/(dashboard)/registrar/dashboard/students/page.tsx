@@ -4,7 +4,6 @@ import { getAllStudent } from "@/services/student/student";
 
 export default async function page() {
     const students = await getAllStudent()
-    console.log(students);
     return (
         <div>
             <StudentManagementHeader />

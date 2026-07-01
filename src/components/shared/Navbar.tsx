@@ -43,7 +43,7 @@ export default function Navbar({
     hasAuthCookie?: boolean;
     defaultDashboard: string
 }) {
-    console.log({ user, hasAuthCookie });
+
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const pathname = usePathname();

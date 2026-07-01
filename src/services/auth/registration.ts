@@ -14,7 +14,6 @@ export const registerStudent = async (
         email: String(formData.get("email")),
         password: String(formData.get("password")),
     }
-    console.log({ payload });
 
     try {
         const response = await serverFetch.post(

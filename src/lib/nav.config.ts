@@ -89,6 +89,12 @@ export const adminNavItems: NavSection[] = [
                 roles: [UserRole.ADMIN],
             },
             {
+                title: "Subject",
+                href: "/admin/dashboard/subjects",
+                icon: "Building2",
+                roles: [UserRole.ADMIN],
+            },
+            {
                 title: "Staff",
                 href: "/admin/dashboard/staff",
                 icon: "Users",
@@ -174,31 +180,31 @@ export const departmentHeadNavItems: NavSection[] = [
         items: [
             {
                 title: "Teachers",
-                href: "/department-head/teachers",
+                href: "/department-head/dashboard/teachers",
                 icon: "Users",
                 roles: [UserRole.DEPARTMENT_HEAD],
             },
             {
                 title: "Students",
-                href: "/department-head/students",
+                href: "/department-head/dashboard/students",
                 icon: "GraduationCap",
                 roles: [UserRole.DEPARTMENT_HEAD],
             },
             {
                 title: "Subjects",
-                href: "/department-head/subjects",
+                href: "/department-head/dashboard/subjects",
                 icon: "BookOpen",
                 roles: [UserRole.DEPARTMENT_HEAD],
             },
             {
-                title: "Routine",
-                href: "/department-head/routine",
+                title: "Curriculum",
+                href: "/department-head/dashboard/curriculum",
                 icon: "CalendarDays",
                 roles: [UserRole.DEPARTMENT_HEAD],
             },
             {
                 title: "Attendance",
-                href: "/department-head/attendance",
+                href: "/department-head/dashboard/attendance",
                 icon: "ClipboardCheck",
                 roles: [UserRole.DEPARTMENT_HEAD],
             },

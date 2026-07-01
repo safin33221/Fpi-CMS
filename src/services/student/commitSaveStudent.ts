@@ -8,7 +8,7 @@ export const commitImport = async (
     const res = await serverFetch.post(
         `/student-import/commit/${fileId}`
     );
-    console.log(fileId);
+
 
     const data = await res.json();
 

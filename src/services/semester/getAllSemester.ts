@@ -8,7 +8,8 @@ export const getAllSemester = async () => {
             return null;
         }
         const result = await res.json()
-        console.log(result);        return result.data
+
+        return result.data
     } catch (err) {
         console.log(err);
     }

@@ -55,7 +55,7 @@ export default function ImportStudentForm() {
                 );
                 return;
             }
-            console.log(result);
+
 
             /**
              * Backend should return
