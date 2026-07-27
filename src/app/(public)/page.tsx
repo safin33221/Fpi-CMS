@@ -1,4 +1,5 @@
 import Hero from "@/components/module/public/home/Hero";
+import { NoticeBoard } from "@/components/module/public/home/NoticeBoard";
 import { PrincipalMessage } from "@/components/module/public/home/PrincipalMessage";
 
 export default function Home() {
@@ -6,6 +7,7 @@ export default function Home() {
     <div>
       <Hero />
       <PrincipalMessage />
+      <NoticeBoard />
     </div>
   );
 };
