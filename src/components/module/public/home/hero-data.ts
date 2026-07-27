@@ -1,72 +1,85 @@
 import {
-  LayersIcon,
-  MapPinnedIcon,
-  UserCheckIcon,
-  UsersIcon,
+  Layers,
+  MapPin,
+  UserCheck,
+  Users,
+  type LucideIcon,
 } from "lucide-react";
+import type { StaticImageData } from "next/image";
+
+// Local image import
+
+
 
 export type Slide = {
-  src: string;
+  src: StaticImageData | string;
   alt: string;
   caption: string;
 };
 
+export type StatItem = {
+  label: string;
+  value: number;
+  suffix: string;
+  icon: LucideIcon;
+};
+
 export const SLIDES: Slide[] = [
   {
-    src: "/images/hero/campus-1.jpg",
+    src: "/fpi1.jpeg",
     alt: "Main academic building of Feni Polytechnic Institute",
     caption: "Academic Building — Main Campus",
   },
   {
-    src: "/images/hero/campus-2.jpg",
+    src: "/fpi1.jpeg",
     alt: "Technology Workshop",
     caption: "Technology Workshops & Labs",
   },
   {
-    src: "/images/hero/campus-3.jpg",
-    alt: "Library",
+    src: "/fpi1.jpeg",
+    alt: "Central Library",
     caption: "Central & Digital Library",
   },
   {
-    src: "/images/hero/campus-3.jpg",
-    alt: "Library",
-    caption: "Central & Digital Library",
+    src: "/fpi1.jpeg",
+    alt: "Computer Department Lab",
+    caption: "Advanced Computer Labs",
   },
   {
-    src: "/images/hero/campus-3.jpg",
-    alt: "Library",
-    caption: "Central & Digital Library",
+    src: "/fpi1.jpeg",
+    alt: "Auditorium & Events",
+    caption: "Institute Auditorium",
   },
   {
-    src: "/images/hero/campus-3.jpg",
-    alt: "Library",
-    caption: "Central & Digital Library",
+    src: "/fpi1.jpeg",
+    alt: "Campus View",
+    caption: "Green Campus Environment",
   },
 ];
 
-export const STATS = [
+export const STATS: StatItem[] = [
   {
     label: "Total Students",
     value: 4200,
     suffix: "+",
-    icon: UsersIcon,
+    icon: Users,
   },
   {
     label: "Departments",
     value: 7,
     suffix: "",
-    icon: LayersIcon,
+    icon: Layers,
   },
   {
     label: "Faculty Members",
     value: 130,
     suffix: "+",
-    icon: UserCheckIcon,
+    icon: UserCheck,
   },
   {
     label: "Campus Area (Acres)",
     value: 18,
     suffix: "",
-    icon: MapPinnedIcon,
+    icon: MapPin,
   },
 ];

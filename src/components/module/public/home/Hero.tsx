@@ -121,7 +121,7 @@ export default function Hero() {
             <div className="relative aspect-16/11 w-full overflow-hidden rounded-3xl border border-white/50 bg-slate-900 shadow-2xl">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={SLIDES[index].src}
+                  key={index}
                   initial={{ opacity: 0, scale: 1.08 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.96 }}
