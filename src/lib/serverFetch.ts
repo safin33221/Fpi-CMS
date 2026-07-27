@@ -1,7 +1,6 @@
 
 import { cookies } from "next/headers"
-const BackendURL =
-    process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL
+const BackendURL = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const buildRequestUrl = (endpoint: string): string | null => {
     if (!BackendURL) {
