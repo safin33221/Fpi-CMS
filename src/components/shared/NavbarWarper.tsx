@@ -24,7 +24,11 @@ export default async function NavbarWarper() {
                 hasAuthCookie={hasAuthCookie}
                 defaultDashboard={defaultDashboard}
             />
-            <Navbar />
+
+            <div className="sticky top-0 z-50">
+                <Navbar />
+            </div>
+
         </div>
     );
 };
