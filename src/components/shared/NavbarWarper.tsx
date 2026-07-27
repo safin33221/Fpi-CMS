@@ -1,5 +1,4 @@
 
-import { getCookies } from "@/services/auth/tokenHandler";
 
 import Navbar from "./Navbar";
 import { myProfile } from "@/services/user/my-profile";
@@ -13,9 +12,7 @@ export default async function NavbarWarper() {
 
 
 
-    const accessToken = await getCookies("accessToken")
-    const refreshToken = await getCookies("refreshToken")
-    const hasAuthCookie = Boolean(accessToken || refreshToken)
+    const hasAuthCookie = !!user;
     const defaultDashboard = getDefaultDashboard(user?.role)
 
 

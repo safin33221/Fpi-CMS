@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import DashboardSidebar from "@/components/module/dashboard/DashboardSidebar";
 
 export default function Layout({
