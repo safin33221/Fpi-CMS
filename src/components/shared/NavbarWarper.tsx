@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import { myProfile } from "@/services/user/my-profile";
 import { getDefaultDashboard } from "@/lib/auth-utils";
 import { IUser } from "@/types/user";
+import UtilityBar from "./UtilityBar";
 
 
 
@@ -18,11 +19,12 @@ export default async function NavbarWarper() {
 
     return (
         <div>
-            <Navbar
+            <UtilityBar
                 user={user}
                 hasAuthCookie={hasAuthCookie}
                 defaultDashboard={defaultDashboard}
             />
+            <Navbar />
         </div>
     );
 };

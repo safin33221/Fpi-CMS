@@ -4,53 +4,145 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-    Bell,
-    ChevronDown,
-    LayoutDashboard,
-    LogOut,
-    Menu,
-    Settings,
-    User,
-    X,
-} from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 
-import { Button, buttonVariants } from "../ui/button";
+import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import LogoutButton from "./logoutButton";
 
-const NAV_ITEMS = [
-    { label: "Home", href: "/" },
-    { label: "Features", href: "/features" },
-    { label: "Attendance", href: "/attendance" },
-    { label: "Departments", href: "/departments" },
-    { label: "Contact", href: "/contact" },
+export const NAV_ITEMS = [
+    {
+        label: "Home",
+        href: "/",
+    },
+
+    {
+        label: "About",
+        href: "/about",
+        children: [
+            {
+                label: "About FPI",
+                href: "/about",
+            },
+            {
+                label: "Principal's Message",
+                href: "/about/principal-message",
+            },
+            {
+                label: "History",
+                href: "/about/history",
+            },
+            {
+                label: "Mission & Vision",
+                href: "/about/mission-vision",
+            },
+            {
+                label: "Campus Facilities",
+                href: "/about/facilities",
+            },
+        ],
+    },
+
+    {
+        label: "Departments",
+        href: "/departments",
+        children: [
+            {
+                label: "Computer Technology",
+                href: "/departments/computer",
+            },
+            {
+                label: "Civil Technology",
+                href: "/departments/civil",
+            },
+            {
+                label: "Electrical Technology",
+                href: "/departments/electrical",
+            },
+            {
+                label: "Electronics Technology",
+                href: "/departments/electronics",
+            },
+            {
+                label: "Mechanical Technology",
+                href: "/departments/mechanical",
+            },
+            {
+                label: "Power Technology",
+                href: "/departments/power",
+            },
+        ],
+    },
+
+    {
+        label: "Academics",
+        href: "/academics",
+        children: [
+            {
+                label: "Programs",
+                href: "/academics/programs",
+            },
+            {
+                label: "Curriculum",
+                href: "/academics/curriculum",
+            },
+            {
+                label: "Academic Calendar",
+                href: "/academics/calendar",
+            },
+            {
+                label: "Class Routine",
+                href: "/academics/routine",
+            },
+            {
+                label: "Exam Schedule",
+                href: "/academics/exams",
+            },
+        ],
+    },
+
+    {
+        label: "Admission",
+        href: "/admission",
+        children: [
+            {
+                label: "Admission Information",
+                href: "/admission",
+            },
+            {
+                label: "Requirements",
+                href: "/admission/requirements",
+            },
+            {
+                label: "Apply Online",
+                href: "/admission/apply",
+            },
+            {
+                label: "Admission Result",
+                href: "/admission/result",
+            },
+        ],
+    },
+
+    {
+        label: "Notice",
+        href: "/notices",
+    },
+
+    {
+        label: "Contact",
+        href: "/contact",
+    },
 ];
 
-export default function Navbar({
-    user,
-    hasAuthCookie = false,
-    defaultDashboard,
-}: {
-    user: any;
-    hasAuthCookie?: boolean;
-    defaultDashboard: string
-}) {
+export default function Navbar() {
 
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const pathname = usePathname();
 
     return (
-        <nav className="fixed left-1/2 top-3 z-50 w-full max-w-7xl -translate-x-1/2 px-3 sm:top-4 sm:px-4 lg:px-6">
-            <div className="flex h-14 items-center justify-between rounded-2xl border border-slate-200 px-4 shadow-lg backdrop-blur-xl sm:h-16 lg:px-6  ">
+        <nav className="fixed left-1/2  z-50 w-full  -translate-x-1/2 ">
+            <div className="flex h-14 items-center justify-between  border border-slate-200 px-4 shadow-lg backdrop-blur-xl sm:h-20 lg:px-6  ">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
@@ -60,152 +152,78 @@ export default function Navbar({
                     </div>
 
                     <div>
-                        <h1 className="text-sm font-bold leading-none lg:text-base">
-                            FPI CMS
+                        <h1 className="text-sm font-bold leading-none md:text-2xl">
+                            Feni Polytechnic Institute
                         </h1>
 
                         <p className="hidden text-xs text-muted-foreground md:block">
-                            Feni Polytechnic Institute
+
                         </p>
                     </div>
                 </Link>
 
                 {/* Desktop Nav */}
-                <div className="hidden items-center gap-2 md:flex lg:gap-3">
-                    {NAV_ITEMS.map((item) => {
-                        const isActive = pathname === item.href;
-
-                        return (
-                            <Link
-                                key={item.label}
-                                href={item.href}
-                                className={cn(
-                                    "rounded-xl px-4 py-2 text-sm font-medium transition",
-                                    isActive
-                                        ? "bg-primary text-white"
-                                        : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10"
-                                )}
-                            >
-                                {item.label}
-                            </Link>
-                        );
-                    })}
-                </div>
 
                 {/* Right Side */}
-                <div className="flex items-center gap-2">
-                    {hasAuthCookie && user ? (
-                        <>
-                            {/* Notification */}
-                            <Button
-                                size="icon"
-                                variant="outline"
-                                className="hidden rounded-xl border-slate-200 md:flex "
-                            >
-                                <Bell size={18} />
-                            </Button>
+                <div className="flex items-end gap-2">
+                    <div className="hidden items-center gap-2 md:flex lg:gap-3">
+                        {NAV_ITEMS.map((item) => {
+                            const isActive =
+                                pathname === item.href ||
+                                item.children?.some((child) => pathname === child.href);
 
-                            {/* User Dropdown */}
-                            <DropdownMenu>
-                                <DropdownMenuTrigger>
-                                    <div className="h-11 rounded-xl border border-slate-200 bg-background px-3  ">
-                                        <div className="flex items-center gap-3">
-                                            <div className="flex h-9 w-9 items-center justify-center rounded-full ">
-                                                <span className="text-sm font-semibold text-black">
-                                                    {user?.name?.charAt(0)?.toUpperCase() || "U"}
-                                                </span>
-                                            </div>
+                            if (item.children?.length) {
+                                return (
+                                    <div key={item.label} className="group relative">
+                                        <button
+                                            className={cn(
+                                                "flex items-center gap-1 rounded-xl px-4 py-2 text-lg transition",
+                                                isActive
+                                                    ? "bg-primary/10 font-medium text-blue-600"
+                                                    : "text-slate-700 hover:bg-slate-100"
+                                            )}
+                                        >
+                                            {item.label}
+                                            <ChevronDown className="h-4 w-4 transition group-hover:rotate-180" />
+                                        </button>
 
-                                            <div className="hidden text-left md:block">
-                                                <h3 className="max-w-30 truncate text-sm  text-black font-semibold">
-                                                    {user?.name || "User"}
-                                                </h3>
-
-                                                <p className="text-xs capitalize text-muted-foreground">
-                                                    {user?.role || "Student"}
-                                                </p>
-                                            </div>
-
-                                            <ChevronDown className="text-black" size={16} />
+                                        <div className="invisible absolute left-0 top-full z-50 mt-2 w-64 rounded-xl border border-slate-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                                            {item.children.map((child) => (
+                                                <Link
+                                                    key={child.href}
+                                                    href={child.href}
+                                                    className={cn(
+                                                        "block rounded-lg px-3 py-2 text-sm transition",
+                                                        pathname === child.href
+                                                            ? "bg-primary/10 font-medium text-blue-600"
+                                                            : "text-slate-700 hover:bg-slate-100"
+                                                    )}
+                                                >
+                                                    {child.label}
+                                                </Link>
+                                            ))}
                                         </div>
                                     </div>
-                                </DropdownMenuTrigger>
+                                );
+                            }
 
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-60 rounded-2xl p-2 bg-white text-black hover:text-black"
+                            return (
+                                <Link
+                                    key={item.label}
+                                    href={item.href}
+                                    className={cn(
+                                        "rounded-xl px-4 py-2 text-lg transition",
+                                        isActive
+                                            ? "bg-primary/10 font-medium text-blue-600"
+                                            : "text-slate-700 hover:bg-slate-100"
+                                    )}
                                 >
-                                    {/* User Info */}
-                                    <div className="mb-2 rounded-xl bg-muted/5 p-3">
-                                        <h3 className="truncate text-sm font-semibold">
-                                            {user?.name}
-                                        </h3>
+                                    {item.label}
+                                </Link>
+                            );
+                        })}
+                    </div>
 
-                                        <p className="truncate text-xs ">
-                                            {user?.email}
-                                        </p>
-                                    </div>
-
-                                    <DropdownMenuSeparator />
-
-                                    {/* Dashboard */}
-                                    <Link href={defaultDashboard}>
-                                        <DropdownMenuItem className="mt-1 flex cursor-pointer  items-center gap-2 rounded-xl">
-                                            <LayoutDashboard className="" size={16} />
-                                            Dashboard
-                                        </DropdownMenuItem>
-                                    </Link>
-
-                                    {/* Profile */}
-                                    <Link href="/profile">
-                                        <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-xl">
-                                            <User size={16} />
-                                            Profile
-                                        </DropdownMenuItem>
-                                    </Link>
-
-                                    {/* Settings */}
-                                    <Link href="/settings">
-                                        <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-xl">
-                                            <Settings size={16} />
-                                            Settings
-                                        </DropdownMenuItem>
-                                    </Link>
-
-                                    <DropdownMenuSeparator />
-
-
-                                    <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-xl text-red-500 focus:text-red-500">
-                                        <LogOut size={16} />
-                                        <LogoutButton />
-                                </DropdownMenuItem>
-
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </>
-                    ) : (
-                        <>
-                            <Link
-                                href="/login"
-                                className={cn(
-                                    buttonVariants({ variant: "outline" }),
-                                    "rounded-xl border border-slate-200 bg-background px-4 py-2 text-black dark:border-white/10 dark:bg-transparent dark:text-white"
-                                )}
-                            >
-                                Login
-                            </Link>
-
-                            <Link
-                                href="/get-start"
-                                className={cn(
-                                    buttonVariants(),
-                                    "rounded-xl px-4 py-2 text-sm"
-                                )}
-                            >
-                                Get Started
-                            </Link>
-                        </>
-                    )}
 
                     {/* Mobile Toggle */}
                     <Button
@@ -252,42 +270,6 @@ export default function Navbar({
                         );
                     })}
 
-                    {/* Mobile Actions */}
-                    <div className="flex flex-col gap-3 pt-3">
-                        {hasAuthCookie && user ? (
-                            <>
-
-
-
-                            </>
-                        ) : (
-                            <>
-                                <Link
-                                    href="/login"
-                                    className={cn(
-                                        buttonVariants({
-                                            variant: "outline",
-                                        }),
-                                        "w-full rounded-xl"
-                                    )}
-                                    onClick={() => setMobileOpen(false)}
-                                >
-                                    Login
-                                </Link>
-
-                                <Link
-                                    href="/get-start"
-                                    className={cn(
-                                        buttonVariants(),
-                                        "w-full rounded-xl"
-                                    )}
-                                    onClick={() => setMobileOpen(false)}
-                                >
-                                    Get Started
-                                </Link>
-                            </>
-                        )}
-                    </div>
                 </div>
             </div>
         </nav>
