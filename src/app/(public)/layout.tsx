@@ -1,20 +1,24 @@
+import type { ReactNode } from "react";
+
 import { Footer } from "@/components/common/Footer";
 import NavbarWarper from "@/components/shared/NavbarWarper";
+import Navbar from "@/components/shared/Navbar";
 
+interface PublicLayoutProps {
+    children: ReactNode;
+}
 
-
-
-export default function layout({ children }: { children: React.ReactNode }) {
+export default function PublicLayout({
+    children,
+}: PublicLayoutProps) {
     return (
-        <div>
-
-
+        <>
             <NavbarWarper />
 
-            <main className="">
-                {children}
-            </main>
+            <Navbar />
+            <main>{children}</main>
+
             <Footer />
-        </div>
+        </>
     );
-};
+}

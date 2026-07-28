@@ -141,8 +141,8 @@ export default function Navbar() {
     const pathname = usePathname();
 
     return (
-        <nav className="w-full">
-            <div className="flex h-14 items-center justify-between  border border-slate-200 px-4 shadow-lg bg-white sm:h-20 lg:px-6  ">
+        <nav className="sticky top-0 z-50">
+            <div className="flex  h-14 items-center justify-between  border border-slate-200 px-4 shadow-lg bg-white sm:h-20 lg:px-6  ">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">

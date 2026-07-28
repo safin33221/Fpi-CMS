@@ -58,7 +58,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(
-        "h-full bg-white text-neutral-950 antialiased",
+        "h-full bg-white text-neutral-950 ",
         geistSans.variable,
         geistMono.variable,
         "font-serif",
