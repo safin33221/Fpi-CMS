@@ -1,3 +1,4 @@
+import { Footer } from "@/components/common/Footer";
 import NavbarWarper from "@/components/shared/NavbarWarper";
 
 
@@ -13,9 +14,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
             <main className="">
                 {children}
             </main>
-            <footer>
-                <h1>Footer</h1>
-            </footer>
+            <Footer />
         </div>
     );
 };

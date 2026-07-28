@@ -132,6 +132,7 @@ export default function Hero() {
                     src={SLIDES[index].src}
                     alt={SLIDES[index].alt}
                     fill
+                    sizes=""
                     priority
                     className="object-cover object-center"
                   />

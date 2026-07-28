@@ -43,8 +43,8 @@ export default function UtilityBar({
 
         {/* Right */}
         {hasAuthCookie && user ? (
-          <div className="flex items-center gap-3">
-            <span className="hidden text-sm text-blue-100 md:block">
+          <div className="flex justify-between items-center gap-3">
+            <span className=" text-sm text-blue-100">
               Welcome,{" "}
               <span className="font-semibold text-white">
                 {user.name}

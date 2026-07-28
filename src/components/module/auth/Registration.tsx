@@ -84,11 +84,21 @@ export default function Registration() {
   const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const handleVerificationSuccess = (
+    verifiedStudent: StudentInfo | null
+  ) => {
+    if (
+      !verifiedStudent ||
+      !verifiedStudent.studentId ||
+      !verifiedStudent.name
+    ) {
+      setError("Student information not found.");
+      return;
+    }
 
-  const handleVerificationSuccess = (verifiedStudent: StudentInfo) => {
     setStudentInfo(verifiedStudent);
-    setStep('review');
     setError(null);
+    setStep("review");
   };
 
   const handleVerificationError = (errMsg: string) => {

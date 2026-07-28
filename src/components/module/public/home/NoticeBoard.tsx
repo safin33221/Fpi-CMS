@@ -131,7 +131,7 @@ export function NoticeBoard() {
           {visible.map((notice) => (
             <li
               key={notice.title}
-              className="flex flex-col gap-4 p-4 transition-colors hover:bg-slate-50/80 sm:flex-row sm:items-center sm:gap-6 sm:p-5"
+              className="flex flex-col gap-4 p-3 transition-colors hover:bg-slate-50/80 sm:flex-row sm:items-center sm:gap-6 sm:p-4"
             >
               {/* Date Box */}
               <div className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-xl border border-blue-100 bg-blue-50/60 text-center leading-none">
