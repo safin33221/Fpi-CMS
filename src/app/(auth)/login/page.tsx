@@ -2,22 +2,20 @@ import LoginForm from "@/components/module/auth/LoginForm";
 import { BookOpen, GraduationCap, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
-export default function page() {
+export default function Page() {
   return (
-    <div className="relative flex min-h-screen overflow-hidden bg-linear-to-br from-sky-100 via-white to-indigo-100 ">
-      <div className="max-w-7x mx-auto">
+    <div className="relative min-h-screen bg-slate-50 md:overflow-hidden md:bg-linear-to-br md:from-sky-100 md:via-white md:to-indigo-100">
+      {/* Background Decoration (Desktop Only) */}
+      <div className="absolute inset-0 hidden md:block">
+        <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-indigo-300/20 blur-3xl" />
 
-        {/* Decorative Background */}
-        <div className="absolute inset-0">
-          <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-indigo-300/20 blur-3xl" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#dbeafe20_1px,transparent_1px),linear-gradient(to_bottom,#dbeafe20_1px,transparent_1px)] bg-size-[40px_40px]" />
+      </div>
 
-          {/* Grid Pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#dbeafe20_1px,transparent_1px),linear-gradient(to_bottom,#dbeafe20_1px,transparent_1px)] bg-size-[40px_40px]" />
-        </div>
-
-        <div className="relative z-10 grid w-full lg:grid-cols-2">
-          {/* Left Campus Branding */}
+      <div className="relative z-10 mx-auto w-full max-w-7xl">
+        <div className="grid min-h-screen lg:grid-cols-2">
+          {/* ================= Desktop Left ================= */}
           <section className="hidden flex-col justify-center px-16 py-12 lg:flex">
             <div className="max-w-lg">
               <div className="mb-6 inline-flex items-center gap-3 rounded-full border border-primary/20 bg-white/70 px-5 py-2 shadow-sm backdrop-blur">
@@ -43,10 +41,12 @@ export default function page() {
                   <div className="rounded-xl bg-sky-100 p-3">
                     <BookOpen className="h-5 w-5 text-sky-600" />
                   </div>
+
                   <div>
                     <h3 className="font-semibold text-slate-900">
                       Student Dashboard
                     </h3>
+
                     <p className="text-sm text-slate-500">
                       Courses, notices, attendance & more.
                     </p>
@@ -57,10 +57,12 @@ export default function page() {
                   <div className="rounded-xl bg-indigo-100 p-3">
                     <ShieldCheck className="h-5 w-5 text-indigo-600" />
                   </div>
+
                   <div>
                     <h3 className="font-semibold text-slate-900">
                       Secure Campus Access
                     </h3>
+
                     <p className="text-sm text-slate-500">
                       Protected authentication system for students & faculty.
                     </p>
@@ -70,11 +72,46 @@ export default function page() {
             </div>
           </section>
 
-          {/* Login Card */}
-          <section className="flex items-center justify-center px-4 py-10">
-            <div className="w-full max-w-md">
+          {/* ================= Login ================= */}
+          <section className="flex min-h-screen items-center justify-center">
+            {/* Mobile (No Card) */}
+            <div className="w-full px-6 py-10 md:px-8 lg:hidden">
+              <div className="mb-10 text-center">
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+                  <GraduationCap className="h-8 w-8 text-primary" />
+                </div>
+
+                <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">
+                  FPI CMS
+                </p>
+
+                <h1 className="mt-4 text-3xl font-black text-slate-900">
+                  Welcome Back
+                </h1>
+
+                <p className="mt-2 text-sm leading-relaxed text-slate-500">
+                  Sign in to continue your academic journey.
+                </p>
+              </div>
+
+              <LoginForm />
+
+              <div className="mt-8 text-center">
+                <p className="text-sm text-slate-500">
+                  New student?{" "}
+                  <Link
+                    href="/get-start"
+                    className="font-semibold text-primary hover:underline"
+                  >
+                    Create an account
+                  </Link>
+                </p>
+              </div>
+            </div>
+
+            {/* Desktop (Card) */}
+            <div className="hidden w-full max-w-md lg:block">
               <div className="rounded-3xl border border-white/40 bg-white/80 p-8 shadow-2xl backdrop-blur-xl">
-                {/* Header */}
                 <div className="mb-8 text-center">
                   <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
                     <GraduationCap className="h-8 w-8 text-primary" />
@@ -93,16 +130,14 @@ export default function page() {
                   </p>
                 </div>
 
-                {/* Form */}
                 <LoginForm />
 
-                {/* Footer */}
                 <div className="mt-8 border-t border-slate-200 pt-6 text-center">
                   <p className="text-sm text-slate-500">
                     New student?{" "}
                     <Link
                       href="/get-start"
-                      className="font-semibold text-primary transition hover:underline"
+                      className="font-semibold text-primary hover:underline"
                     >
                       Create an account
                     </Link>
@@ -112,8 +147,7 @@ export default function page() {
             </div>
           </section>
         </div>
-
       </div>
     </div>
   );
-};
+}
