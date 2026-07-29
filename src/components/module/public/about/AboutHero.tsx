@@ -13,6 +13,7 @@ export default function AboutHero() {
         alt="Feni Polytechnic Institute Campus"
         fill
         priority
+        quality={100}
         className="object-cover opacity-90"
       />
 
