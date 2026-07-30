@@ -1,3 +1,4 @@
+import DashboardBottomNav from "@/components/module/dashboard/DashboardBottomNav";
 
 export default function layout({
     children,
@@ -5,8 +6,12 @@ export default function layout({
     children: React.ReactNode;
 }) {
     return (
-        <div>
-            {children}
+        <div className="min-h-screen">
+            <div>
+
+                {children}
+            </div>
+            <DashboardBottomNav />
         </div>
     );
 };
