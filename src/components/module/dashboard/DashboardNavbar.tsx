@@ -1,8 +1,12 @@
+import { myProfile } from "@/services/user/my-profile";
+import { IUser } from "@/types/user";
+import DashboardNavbarContent from "./DashboardNavbarContent";
 
-export default function DashboardNavbar() {
+export default async function DashboardNavbar() {
+    const user: IUser = await myProfile()
     return (
         <div>
-            <h1>DashboardNavbar Component</h1>
+            <DashboardNavbarContent user={user} />
         </div>
     );
 };

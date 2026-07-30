@@ -6,10 +6,39 @@ import { Button } from "@/components/ui/button";
 import { login } from "@/services/auth/login";
 import { Eye, EyeOff, Lock, User, Loader2, AlertCircle } from "lucide-react";
 
+const demoAccounts = [
+  {
+    label: "Admin",
+    identifier: "admin@fpi.edu.bd",
+    password: "Admin@123",
+  },
+  {
+    label: "Student",
+    identifier: "student@gmail.com",
+    password: "student",
+  },
+
+  // Future
+  {
+    label: "Teacher",
+    identifier: "10003",
+    password: "FPI@10003",
+  },
+  {
+    label: "Register",
+    identifier: "10004",
+    password: "FPI@10004",
+  },
+
+];
+
 export default function LoginForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-
+  const [credentials, setCredentials] = useState({
+    identifier: "",
+    password: "",
+  });
   const [state, formAction, isPending] = useActionState(login, {
     success: false,
     message: "",
@@ -42,8 +71,15 @@ export default function LoginForm() {
             type="text"
             autoComplete="username"
             autoCapitalize="none"
-            spellCheck="false"
+            spellCheck={false}
             placeholder="Enter Student ID, Email or Phone"
+            value={credentials.identifier}
+            onChange={(e) =>
+              setCredentials((prev) => ({
+                ...prev,
+                identifier: e.target.value,
+              }))
+            }
             className="h-11 sm:h-12 w-full rounded-xl border border-slate-200 bg-slate-50/50 pl-10 pr-4 text-sm text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
           />
         </div>
@@ -70,6 +106,13 @@ export default function LoginForm() {
             type={showPassword ? "text" : "password"}
             autoComplete="current-password"
             placeholder="Enter your password"
+            value={credentials.password}
+            onChange={(e) =>
+              setCredentials((prev) => ({
+                ...prev,
+                password: e.target.value,
+              }))
+            }
             className="h-11 sm:h-12 w-full rounded-xl border border-slate-200 bg-slate-50/50 pl-10 pr-11 text-sm text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
           />
           <button
@@ -94,7 +137,31 @@ export default function LoginForm() {
           <span>{state.message}</span>
         </div>
       )}
+      <div className="space-y-2">
+        <p className="text-xs font-medium text-slate-500">
+          Demo Credentials
+        </p>
 
+        <div className="flex flex-wrap gap-2">
+          {demoAccounts.map((account) => (
+            <Button
+              key={account.label}
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                setCredentials({
+                  identifier: account.identifier,
+                  password: account.password,
+                })
+              }
+              className="text-xs"
+            >
+              {account.label}
+            </Button>
+          ))}
+        </div>
+      </div>
       {/* Login Button */}
       <Button
         type="submit"
