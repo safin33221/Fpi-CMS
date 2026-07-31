@@ -1,8 +1,9 @@
+import UnderDevelopment from "@/components/common/UnderDevelopment";
 
 export default function page() {
     return (
         <div>
-            <h1>Dashboard Component</h1>
+            <UnderDevelopment/>
         </div>
     );
 };
