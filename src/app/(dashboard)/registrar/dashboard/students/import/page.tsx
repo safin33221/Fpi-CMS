@@ -1,7 +1,7 @@
 import { FileSpreadsheet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import ImportStudentForm from "@/components/module/register/student/ImportStudentForm";
+import ImportStudentForm from "@/components/module/student/ImportStudentForm";
 
 export default function ImportStudentsPage() {
     return (

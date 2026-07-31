@@ -1,5 +1,5 @@
-import StudentManagement from "@/components/module/register/student/StudentManagement";
-import StudentManagementHeader from "@/components/module/register/student/StudentManagementHeader";
+import StudentManagement from "@/components/module/student/StudentManagement";
+import StudentManagementHeader from "@/components/module/student/StudentManagementHeader";
 import { getAllStudent } from "@/services/student/student";
 
 export default async function page() {

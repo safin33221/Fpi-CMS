@@ -5,6 +5,7 @@ import { ITeacher } from "@/types/teacher";
 
 export default async function SettingsPage() {
     const teachers: ITeacher[] = await getDepartmentTeachers()
+
     return (
         <div>
             <TeacherManagementHeader />

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import ImportPreviewTable from "@/components/module/register/student/ImportPreviewTable";
+import ImportPreviewTable from "@/components/module/student/ImportPreviewTable";
 import { Button } from "@/components/ui/button";
 import { getImportPreview } from "@/services/student/getImportPreview";
 
