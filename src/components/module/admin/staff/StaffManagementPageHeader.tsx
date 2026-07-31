@@ -8,7 +8,7 @@ export default function StaffManagementPageHeader() {
     return (
         <div>
             <ManagementPageHeader
-                title="Staff Management"
+                title="Employee Management"
                 description="Manage teachers, accountants,
                         registrars, librarians and
                         exam controllers."

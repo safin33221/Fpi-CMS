@@ -17,7 +17,7 @@ export default async function CreateStaffPage() {
         <div className="space-y-6">
             <ManagementPageHeader
 
-                title="Create Staff"
+                title="Create employee"
                 description=" Create teacher, accountant,
                     registrar, librarian or exam
                     controller account."

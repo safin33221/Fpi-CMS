@@ -95,7 +95,7 @@ export const adminNavItems: NavSection[] = [
                 roles: [UserRole.ADMIN],
             },
             {
-                title: "Staff",
+                title: "Employee",
                 href: "/admin/dashboard/staff",
                 icon: "Users",
                 roles: [UserRole.ADMIN],
