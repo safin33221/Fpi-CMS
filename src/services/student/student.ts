@@ -14,6 +14,22 @@ export const getAllStudent = async () => {
         );
     }
 
-    
+
+    return result.data;
+};
+
+export const getStudent = async (id: string) => {
+    const res = await serverFetch.get(`/student/${id}`, {
+        cache: "no-store",
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+        throw new Error(
+            result?.message || "Failed to fetch student"
+        );
+    }
+
     return result.data;
 };

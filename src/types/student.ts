@@ -23,7 +23,7 @@ export interface IStudent {
 
   department: IDepartment;
   semester: ISemester;
-
+  status: string
   createdAt: string;
   updatedAt: string;
 }

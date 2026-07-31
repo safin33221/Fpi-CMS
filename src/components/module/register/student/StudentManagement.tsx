@@ -4,6 +4,7 @@ import { IStudent } from "@/types/student";
 import { StudentColumns } from "./StudentTableColumn";
 
 export default function StudentManagement({ students }: { students: IStudent[] }) {
+    console.log(students);
     return (
         <div>
             <ManagementTable

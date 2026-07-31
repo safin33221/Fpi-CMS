@@ -4,6 +4,7 @@ import {
     BadgeCheck,
     Building2,
     CalendarDays,
+    CheckCircle2,
     GraduationCap,
     Phone,
     User,
@@ -12,6 +13,8 @@ import {
 import { columns } from "@/components/shared/ManagementTable";
 
 import { IStudent } from "@/types/student";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const StudentColumns: columns<IStudent>[] = [
     {
@@ -157,6 +160,22 @@ export const StudentColumns: columns<IStudent>[] = [
             ) : (
                 <div className="inline-flex items-center gap-2 rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
                     Inactive
+                </div>
+            ),
+    },
+    {
+        header: "Admission",
+        accessor: (student) =>
+            student.status === "PENDING_ACTIVATION" ? (
+                <Button size="sm" className="h-8 rounded-lg">
+                    <Link href={`/registrar/dashboard/students/${student.id}`}>
+                        Take Admission
+                    </Link>
+                </Button>
+            ) : (
+                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+                    <CheckCircle2 size={13} />
+                    Admitted
                 </div>
             ),
     },

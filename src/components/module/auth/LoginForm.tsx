@@ -13,6 +13,11 @@ const demoAccounts = [
     password: "Admin@123",
   },
   {
+    label: "D Head",
+    identifier: "10005",
+    password: "FPI@10005",
+  },
+  {
     label: "Student",
     identifier: "student@gmail.com",
     password: "student",
