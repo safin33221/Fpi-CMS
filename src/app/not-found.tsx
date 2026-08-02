@@ -4,7 +4,7 @@ import BackButton from "@/components/common/BackButton";
 
 export default function NotFound() {
     return (
-        <main className="flex min-h-screen items-center justify-center bg-background px-6">
+        <main className="flex  items-center justify-center bg-background px-6">
             <div className="max-w-xl text-center">
                 <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-yellow-500/10">
                     <Construction className="h-12 w-12 text-yellow-600" />
