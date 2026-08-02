@@ -63,15 +63,16 @@ export default function ImportPreviewTable({
                 const result =
                     await commitImport(fileId);
 
-                toast.success(
-                    `${result.imported} students imported successfully.`
-                );
 
                 router.push(
                     "/registrar/dashboard/students"
                 );
 
-                router.refresh();
+
+                toast.success(
+                    `${result.imported} students imported successfully.`
+                );
+
             } catch (error) {
                 toast.error(
                     error instanceof Error
