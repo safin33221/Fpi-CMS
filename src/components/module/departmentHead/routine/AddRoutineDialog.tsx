@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useEffect, useTransition } from "react";
 import { toast } from "react-hot-toast";
 import {
     AlertCircle,
@@ -14,6 +14,7 @@ import {
     Sun,
     Sunset,
     FlaskConical,
+    CalendarRange,
 } from "lucide-react";
 
 import {
@@ -40,6 +41,7 @@ import { ISemester } from "@/types/semester";
 import { ISubjectAssignment } from "@/types/assignment";
 import { ITeacher } from "@/types/teacher";
 import { IRoom, Weekday } from "@/types/routine";
+import { IAcademicSession } from "@/types/academicSession";
 
 interface Props {
     open: boolean;
@@ -49,6 +51,7 @@ interface Props {
     teachers: ITeacher[];
     rooms: IRoom[];
     defaultSemesterId?: string;
+    sessions?: IAcademicSession[];
 }
 
 const WEEKDAYS: { label: string; value: Weekday }[] = [
@@ -92,8 +95,10 @@ export default function AddRoutineDialog({
     teachers,
     rooms,
     defaultSemesterId,
+    sessions = [],
 }: Props) {
     const [semesterId, setSemesterId] = useState(defaultSemesterId ?? semesters[0]?.id ?? "");
+    const [academicSessionId, setAcademicSessionId] = useState<string>("");
     const [subjectAssignmentId, setSubjectAssignmentId] = useState("");
     const [teacherId, setTeacherId] = useState("");
     const [roomId, setRoomId] = useState("");
@@ -104,7 +109,29 @@ export default function AddRoutineDialog({
 
     const [isPending, startTransition] = useTransition();
 
+    // Auto-select session matching semester batch
+    useEffect(() => {
+        if (!sessions || sessions.length === 0) return;
+        const sem = semesters.find((s) => s.id === semesterId);
+        if (sem) {
+            const semNum = sem.number || 1;
+            const batchIdx = Math.floor((semNum - 1) / 2);
+            if (sessions[batchIdx]) {
+                setAcademicSessionId(sessions[batchIdx].id);
+                return;
+            }
+        }
+        if (sessions[0]) {
+            setAcademicSessionId(sessions[0].id);
+        }
+    }, [semesterId, semesters, sessions]);
+
     // Human readable selected objects (prevents raw UUIDs from ever displaying)
+    const selectedSession = useMemo(
+        () => sessions.find((s) => s.id === academicSessionId),
+        [sessions, academicSessionId]
+    );
+
     const selectedSemester = useMemo(
         () => semesters.find((s) => s.id === semesterId),
         [semesters, semesterId]
@@ -178,6 +205,7 @@ export default function AddRoutineDialog({
                 subjectAssignmentId,
                 teacherId,
                 roomId,
+                academicSessionId: academicSessionId || undefined,
                 day,
                 startTime,
                 endTime,
@@ -227,8 +255,8 @@ export default function AddRoutineDialog({
                 )}
 
                 <div className="space-y-5 py-2">
-                    {/* Row 1: Semester & Subject (2 Columns on Desktop) */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {/* Row 1: Semester, Session & Subject */}
+                    <div className={`grid grid-cols-1 ${sessions.length > 0 ? "md:grid-cols-3" : "md:grid-cols-2"} gap-4`}>
                         <div className="space-y-2">
                             <Label htmlFor="semester" className="flex items-center gap-1.5 font-semibold text-xs text-slate-700 dark:text-slate-300">
                                 <GraduationCap className="h-4 w-4 text-primary" />
@@ -258,6 +286,35 @@ export default function AddRoutineDialog({
                                 </SelectContent>
                             </Select>
                         </div>
+
+                        {sessions.length > 0 && (
+                            <div className="space-y-2">
+                                <Label htmlFor="academic-session" className="flex items-center gap-1.5 font-semibold text-xs text-slate-700 dark:text-slate-300">
+                                    <CalendarRange className="h-4 w-4 text-primary" />
+                                    শিক্ষাবর্ষ (Session)
+                                </Label>
+                                <Select
+                                    value={academicSessionId}
+                                    onValueChange={(val) => {
+                                        setAcademicSessionId(val ?? "");
+                                        setErrorMessage(null);
+                                    }}
+                                >
+                                    <SelectTrigger id="academic-session" className="w-full h-10">
+                                        <SelectValue placeholder="সেশন নির্বাচন">
+                                            {selectedSession ? `Session ${selectedSession.name}` : undefined}
+                                        </SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {sessions.map((s) => (
+                                            <SelectItem key={s.id} value={s.id}>
+                                                Session {s.name} {s.isCurrent ? "· নবাগত" : ""}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
 
                         <div className="space-y-2">
                             <Label htmlFor="subject" className="flex items-center gap-1.5 font-semibold text-xs text-slate-700 dark:text-slate-300">

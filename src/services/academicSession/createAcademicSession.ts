@@ -6,8 +6,8 @@ import { serverFetch } from "@/lib/serverFetch";
 
 type CreateAcademicSessionInput = {
     name: string;
-    startDate: string;
-    endDate: string;
+    startDate?: string;
+    endDate?: string;
     isCurrent?: boolean;
     isActive?: boolean;
 };

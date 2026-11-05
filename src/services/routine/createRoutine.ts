@@ -9,6 +9,7 @@ type CreateRoutineInput = {
     subjectAssignmentId: string;
     teacherId: string;
     roomId: string;
+    academicSessionId?: string;
     day: Weekday;
     startTime: string;
     endTime: string;

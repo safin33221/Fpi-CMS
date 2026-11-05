@@ -5,7 +5,6 @@ import { toast } from "react-hot-toast";
 import {
     CalendarRange,
     CheckCircle2,
-    Clock,
     Plus,
     Search,
     Edit2,
@@ -13,6 +12,8 @@ import {
     Star,
     Layers,
     Loader2,
+    Power,
+    Sparkles,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ import {
 import { IAcademicSession } from "@/types/academicSession";
 import AddAcademicSessionDialog from "./AddAcademicSessionDialog";
 import EditAcademicSessionDialog from "./EditAcademicSessionDialog";
+import { toggleSessionStatus } from "@/services/academicSession/toggleSessionStatus";
 import { setCurrentAcademicSession } from "@/services/academicSession/setCurrentAcademicSession";
 import { deleteAcademicSession } from "@/services/academicSession/deleteAcademicSession";
 
@@ -41,14 +43,18 @@ interface Props {
 
 export default function AcademicSessionManagement({ sessions }: Props) {
     const [searchQuery, setSearchQuery] = useState("");
-    const [statusFilter, setStatusFilter] = useState<"ALL" | "CURRENT" | "ACTIVE" | "INACTIVE">("ALL");
+    const [statusFilter, setStatusFilter] = useState<"ALL" | "RUNNING" | "COMPLETED">("ALL");
     const [addDialogOpen, setAddDialogOpen] = useState(false);
     const [editingSession, setEditingSession] = useState<IAcademicSession | null>(null);
     const [sessionToDelete, setSessionToDelete] = useState<IAcademicSession | null>(null);
 
     const [isActionPending, startTransition] = useTransition();
 
-    const currentSession = useMemo(() => {
+    const runningSessions = useMemo(() => {
+        return sessions.filter((s) => s.isActive);
+    }, [sessions]);
+
+    const latestAdmissionSession = useMemo(() => {
         return sessions.find((s) => s.isCurrent && s.isActive);
     }, [sessions]);
 
@@ -56,18 +62,27 @@ export default function AcademicSessionManagement({ sessions }: Props) {
         return sessions.filter((s) => {
             const matchesQuery = s.name.toLowerCase().includes(searchQuery.toLowerCase());
             let matchesStatus = true;
-            if (statusFilter === "CURRENT") {
-                matchesStatus = s.isCurrent;
-            } else if (statusFilter === "ACTIVE") {
+            if (statusFilter === "RUNNING") {
                 matchesStatus = s.isActive;
-            } else if (statusFilter === "INACTIVE") {
+            } else if (statusFilter === "COMPLETED") {
                 matchesStatus = !s.isActive;
             }
             return matchesQuery && matchesStatus;
         });
     }, [sessions, searchQuery, statusFilter]);
 
-    const handleSetCurrent = (session: IAcademicSession) => {
+    const handleToggleRunning = (session: IAcademicSession) => {
+        startTransition(async () => {
+            const res = await toggleSessionStatus(session.id);
+            if (res.success) {
+                toast.success(res.message);
+            } else {
+                toast.error(res.message);
+            }
+        });
+    };
+
+    const handleSetLatestAdmission = (session: IAcademicSession) => {
         startTransition(async () => {
             const res = await setCurrentAcademicSession(session.id);
             if (res.success) {
@@ -91,18 +106,20 @@ export default function AcademicSessionManagement({ sessions }: Props) {
         });
     };
 
-    const formatDate = (dateStr?: string) => {
-        if (!dateStr) return "-";
-        try {
-            const d = new Date(dateStr);
-            return d.toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-            });
-        } catch {
-            return dateStr;
-        }
+    // Helper to calculate BTEB batch label
+    const getBatchSemesterHint = (name: string) => {
+        const match = name.match(/(\d{4})/);
+        if (!match) return "";
+        const startYear = parseInt(match[1], 10);
+        const currentYear = new Date().getFullYear();
+        const diff = currentYear - startYear;
+
+        if (diff === 0) return "১ম ও ২য় পর্ব (১ম বর্ষ)";
+        if (diff === 1) return "৩য় ও ৪র্থ পর্ব (২য় বর্ষ)";
+        if (diff === 2) return "৫ম ও ৬ষ্ঠ পর্ব (৩য় বর্ষ)";
+        if (diff === 3) return "৭ম ও ৮ম পর্ব (৪র্থ বর্ষ)";
+        if (diff > 3) return "উত্তীর্ণ / পাসড আউট ব্যাচ";
+        return "ভবিষ্যৎ শিক্ষাবর্ষ";
     };
 
     return (
@@ -112,10 +129,10 @@ export default function AcademicSessionManagement({ sessions }: Props) {
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2.5">
                         <CalendarRange className="h-6 w-6 text-primary" />
-                        শিক্ষাবর্ষ ব্যবস্থাপনা (Academic Sessions)
+                        শিক্ষাবর্ষ ও রানিং ব্যাচসমূহ (Academic Sessions)
                     </h1>
                     <p className="text-sm text-muted-foreground mt-1">
-                        ক্যাম্পাসের সকল অ্যাকাডেমিক সেশন তৈরি, চলমান সেশন নির্ধারণ এবং ক্লাস রুটিনের শিডিউলিং সাইকেল পরিচালনা করুন।
+                        পলিটেকনিকের ১ম থেকে ৮ম পর্ব পর্যন্ত একই সাথে চলমান সকল শিক্ষাবর্ষ পরিচালনা করুন।
                     </p>
                 </div>
                 <Button
@@ -123,57 +140,65 @@ export default function AcademicSessionManagement({ sessions }: Props) {
                     className="gap-2 shadow-xs shrink-0"
                 >
                     <Plus className="h-4 w-4" />
-                    নতুন শিক্ষাবর্ষ (Add Session)
+                    শিক্ষাবর্ষ যুক্ত করুন (Add Session)
                 </Button>
+            </div>
+
+            {/* Polytechnic Real-World Context Notice */}
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex items-start gap-3">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <div className="text-xs space-y-1">
+                    <p className="font-bold text-foreground">
+                        পলিটেকনিক মাল্টি-সেশন স্ট্রাকচার (BTEB Multi-Session):
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed">
+                        ক্যাম্পাসে যেকোনো সময়ে একসাথে ৪টি আলাদা সেশন ক্লাস করে থাকে (১ম/২য় পর্ব, ৩য়/৪র্থ পর্ব, ৫ম/৬ষ্ঠ পর্ব এবং ৭ম/৮ম পর্ব)। প্রতিটি ব্যাচকে <strong>&quot;চলমান (Running)&quot;</strong> রাখা হয়েছে যাতে সব ব্যাচের ক্লাস রুটিন ও হাজিরা যুগপৎভাবে সক্রিয় থাকে।
+                    </p>
+                </div>
             </div>
 
             {/* Metric / Stat Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="rounded-xl border bg-card p-4 shadow-2xs">
+                <div className="rounded-xl border bg-emerald-500/10 border-emerald-500/20 p-4 shadow-2xs">
                     <div className="flex items-center justify-between">
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                            মোট শিক্ষাবর্ষ
+                        <p className="text-xs font-semibold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
+                            একসাথে চলমান সেশন
                         </p>
-                        <CalendarRange className="h-4 w-4 text-muted-foreground" />
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                     </div>
-                    <p className="text-2xl font-bold mt-2">{sessions.length}</p>
+                    <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300 mt-2">
+                        {runningSessions.length} টি ব্যাচ
+                    </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                        নিবন্ধিত মোট শিক্ষাবর্ষ সংখ্যা
+                        বর্তমানে ক্যাম্পাসে ক্লাস ও রুটিনে সক্রিয়
                     </p>
                 </div>
 
-                <div className="rounded-xl border bg-primary/5 border-primary/20 p-4 shadow-2xs">
+                <div className="rounded-xl border bg-card p-4 shadow-2xs">
                     <div className="flex items-center justify-between">
                         <p className="text-xs font-semibold text-primary uppercase tracking-wider">
-                            চলমান সক্রিয় সেশন
+                            সর্বশেষ নবাগত সেশন
                         </p>
                         <Star className="h-4 w-4 text-primary fill-primary/30" />
                     </div>
                     <p className="text-2xl font-bold text-primary mt-2">
-                        {currentSession ? currentSession.name : "কোনোটি সক্রিয় নেই"}
+                        {latestAdmissionSession ? latestAdmissionSession.name : "নির্ধারিত নেই"}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                        {currentSession
-                            ? `${formatDate(currentSession.startDate)} — ${formatDate(currentSession.endDate)}`
-                            : "একটি শিক্ষাবর্ষ তৈরি করে 'চলমান' করুন"}
+                        সর্বশেষ ভর্তি হওয়া ১ম সেমিস্টার ব্যাচ
                     </p>
                 </div>
 
                 <div className="rounded-xl border bg-card p-4 shadow-2xs">
                     <div className="flex items-center justify-between">
                         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                            ক্লাস রুটিন সাইকেল
+                            মোট সংরক্ষিত শিক্ষাবর্ষ
                         </p>
                         <Layers className="h-4 w-4 text-muted-foreground" />
                     </div>
-                    <p className="text-2xl font-bold mt-2">
-                        {sessions.reduce(
-                            (acc, s) => acc + (s._count?.routines ?? 0),
-                            0
-                        )}
-                    </p>
+                    <p className="text-2xl font-bold mt-2">{sessions.length} টি</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                        বিভিন্ন সেশনের অধীনে সক্রিয় ক্লাস শিডিউল
+                        অতীত ও বর্তমান সকল ব্যাচের ডাটাবেজ রেকর্ড
                     </p>
                 </div>
             </div>
@@ -185,7 +210,7 @@ export default function AcademicSessionManagement({ sessions }: Props) {
                     <Input
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="শিক্ষাবর্ষের নাম দিয়ে খুঁজুন (e.g. 2025)..."
+                        placeholder="শিক্ষাবর্ষ খুঁজুন (e.g. 2024)..."
                         className="pl-9 h-9 text-xs bg-background"
                     />
                 </div>
@@ -194,16 +219,15 @@ export default function AcademicSessionManagement({ sessions }: Props) {
                     {(
                         [
                             { key: "ALL", label: "সকল সেশন" },
-                            { key: "CURRENT", label: "চলমান (Current)" },
-                            { key: "ACTIVE", label: "সক্রিয় (Active)" },
-                            { key: "INACTIVE", label: "নিষ্ক্রিয়" },
+                            { key: "RUNNING", label: "চলমান ব্যাচসমূহ (Running)" },
+                            { key: "COMPLETED", label: "উত্তীর্ণ / পাসড আউট" },
                         ] as const
                     ).map((f) => (
                         <button
                             key={f.key}
                             type="button"
                             onClick={() => setStatusFilter(f.key)}
-                            className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors shrink-0 ${
+                            className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors shrink-0 cursor-pointer ${
                                 statusFilter === f.key
                                     ? "bg-primary text-primary-foreground shadow-xs"
                                     : "bg-background text-muted-foreground hover:text-foreground border border-border/60"
@@ -222,8 +246,8 @@ export default function AcademicSessionManagement({ sessions }: Props) {
                         <thead className="bg-muted/50 border-b text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                             <tr>
                                 <th className="px-5 py-3.5">শিক্ষাবর্ষ (Session Name)</th>
-                                <th className="px-5 py-3.5">মেয়াদ (Duration)</th>
-                                <th className="px-5 py-3.5 text-center">স্ট্যাটাস (Status)</th>
+                                <th className="px-5 py-3.5">আনুমানিক পর্ব / বর্ষ (Semester Range)</th>
+                                <th className="px-5 py-3.5 text-center">ক্যাম্পাস স্ট্যাটাস (Status)</th>
                                 <th className="px-5 py-3.5 text-center">রুটিন ও সেকশন</th>
                                 <th className="px-5 py-3.5 text-right">পদক্ষেপ (Actions)</th>
                             </tr>
@@ -240,7 +264,7 @@ export default function AcademicSessionManagement({ sessions }: Props) {
                                             কোনো শিক্ষাবর্ষ পাওয়া যায়নি
                                         </p>
                                         <p className="text-xs text-muted-foreground mt-0.5">
-                                            উপরে &quot;নতুন শিক্ষাবর্ষ&quot; বাটনে চাপ দিয়ে শিক্ষাবর্ষ যোগ করুন।
+                                            উপরে &quot;শিক্ষাবর্ষ যুক্ত করুন&quot; বাটনে চাপ দিয়ে সেশন তৈরি করুন।
                                         </p>
                                     </td>
                                 </tr>
@@ -249,15 +273,15 @@ export default function AcademicSessionManagement({ sessions }: Props) {
                                     <tr
                                         key={s.id}
                                         className={`hover:bg-muted/30 transition-colors ${
-                                            s.isCurrent ? "bg-primary/[0.03]" : ""
+                                            s.isActive ? "bg-emerald-500/[0.02]" : ""
                                         }`}
                                     >
-                                        {/* Name & Current Indicator */}
+                                        {/* Name & Indicators */}
                                         <td className="px-5 py-4">
                                             <div className="flex items-center gap-3">
                                                 <div
                                                     className={`h-9 w-9 rounded-xl flex items-center justify-center font-bold text-sm ${
-                                                        s.isCurrent
+                                                        s.isActive
                                                             ? "bg-primary text-primary-foreground shadow-xs"
                                                             : "bg-muted text-muted-foreground"
                                                     }`}
@@ -267,52 +291,47 @@ export default function AcademicSessionManagement({ sessions }: Props) {
                                                 <div>
                                                     <div className="flex items-center gap-2">
                                                         <span className="font-bold text-foreground text-sm">
-                                                            {s.name}
+                                                            Session {s.name}
                                                         </span>
                                                         {s.isCurrent && (
                                                             <Badge
                                                                 variant="outline"
-                                                                className="bg-emerald-50 text-emerald-700 border-emerald-300 text-[10px] font-semibold gap-1 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800"
+                                                                className="bg-primary/10 text-primary border-primary/20 text-[10px] font-semibold gap-1"
                                                             >
-                                                                <CheckCircle2 className="h-3 w-3" />
-                                                                চলমান (Current)
+                                                                <Star className="h-2.5 w-2.5 fill-primary" />
+                                                                নবাগত ভর্তি ব্যাচ
                                                             </Badge>
                                                         )}
                                                     </div>
                                                     <p className="text-[11px] text-muted-foreground mt-0.5">
-                                                        শিক্ষাবর্ষ আইডি: {s.id.slice(0, 8)}...
+                                                        আইডি: {s.id.slice(0, 8)}...
                                                     </p>
                                                 </div>
                                             </div>
                                         </td>
 
-                                        {/* Duration */}
+                                        {/* Semester / Year Hint */}
                                         <td className="px-5 py-4">
-                                            <div className="flex items-center gap-2 text-xs font-medium text-foreground">
-                                                <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                                                <span>
-                                                    {formatDate(s.startDate)} — {formatDate(s.endDate)}
-                                                </span>
-                                            </div>
+                                            <span className="text-xs font-semibold text-foreground/80 bg-muted/60 px-2.5 py-1 rounded-md border border-border/40">
+                                                {getBatchSemesterHint(s.name)}
+                                            </span>
                                         </td>
 
-                                        {/* Status */}
+                                        {/* Running Status Toggle */}
                                         <td className="px-5 py-4 text-center">
-                                            {s.isActive ? (
-                                                <Badge
-                                                    variant="secondary"
-                                                    className="bg-muted text-foreground text-xs"
-                                                >
-                                                    সক্রিয় (Active)
-                                                </Badge>
-                                            ) : (
-                                                <Badge
-                                                    variant="outline"
-                                                    className="text-muted-foreground border-border text-xs"
-                                                >
-                                                    নিষ্ক্রিয় (Inactive)
-                                                </Badge>
-                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => handleToggleRunning(s)}
+                                                disabled={isActionPending}
+                                                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                                                    s.isActive
+                                                        ? "bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800"
+                                                        : "bg-muted text-muted-foreground border border-border hover:bg-muted/80"
+                                                }`}
+                                            >
+                                                <Power className="h-3 w-3" />
+                                                {s.isActive ? "চলমান (Running)" : "নিষ্ক্রিয় (Archived)"}
+                                            </button>
                                         </td>
 
                                         {/* Routine & Section Count */}
@@ -324,17 +343,18 @@ export default function AcademicSessionManagement({ sessions }: Props) {
 
                                         {/* Actions */}
                                         <td className="px-5 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2">
-                                                {!s.isCurrent && (
+                                            <div className="flex items-center justify-end gap-1.5">
+                                                {!s.isCurrent && s.isActive && (
                                                     <Button
                                                         size="sm"
-                                                        variant="outline"
-                                                        onClick={() => handleSetCurrent(s)}
+                                                        variant="ghost"
+                                                        onClick={() => handleSetLatestAdmission(s)}
                                                         disabled={isActionPending}
-                                                        className="text-xs h-8 gap-1.5 border-emerald-300 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400"
+                                                        className="text-[11px] h-7 px-2 text-muted-foreground hover:text-foreground"
+                                                        title="১ম পর্বের প্রধান ভর্তি সেশন হিসেবে চিহ্নিত করুন"
                                                     >
-                                                        <CheckCircle2 className="h-3.5 w-3.5" />
-                                                        চলমান করুন
+                                                        <Star className="h-3 w-3 mr-1" />
+                                                        নবাগত সেশন
                                                     </Button>
                                                 )}
 
@@ -342,7 +362,7 @@ export default function AcademicSessionManagement({ sessions }: Props) {
                                                     size="icon"
                                                     variant="ghost"
                                                     onClick={() => setEditingSession(s)}
-                                                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                                                    className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer"
                                                 >
                                                     <Edit2 className="h-3.5 w-3.5" />
                                                 </Button>
@@ -351,7 +371,7 @@ export default function AcademicSessionManagement({ sessions }: Props) {
                                                     size="icon"
                                                     variant="ghost"
                                                     onClick={() => setSessionToDelete(s)}
-                                                    className="h-8 w-8 text-destructive/80 hover:text-destructive hover:bg-destructive/10"
+                                                    className="h-8 w-8 text-destructive/80 hover:text-destructive hover:bg-destructive/10 cursor-pointer"
                                                 >
                                                     <Trash2 className="h-3.5 w-3.5" />
                                                 </Button>
@@ -391,9 +411,9 @@ export default function AcademicSessionManagement({ sessions }: Props) {
                         <AlertDialogDescription className="text-sm">
                             আপনি কি নিশ্চিত যে আপনি{" "}
                             <span className="font-semibold text-foreground">
-                                &quot;{sessionToDelete?.name}&quot;
+                                &quot;Session {sessionToDelete?.name}&quot;
                             </span>{" "}
-                            শিক্ষাবর্ষটি মুছতে চান?
+                            মুছতে চান?
                             <br />
                             <span className="text-xs text-muted-foreground mt-2 block">
                                 দ্রষ্টব্য: যদি এই সেশনের অধীনে কোনো ক্লাস রুটিন বা সেকশন সক্রিয় থাকে, তবে ডাটার সুরক্ষার জন্য এটি ডিলিট না হয়ে স্বয়ংক্রিয়ভাবে নিষ্ক্রিয় (Deactivated) হয়ে যাবে।
@@ -421,4 +441,3 @@ export default function AcademicSessionManagement({ sessions }: Props) {
         </div>
     );
 }
-

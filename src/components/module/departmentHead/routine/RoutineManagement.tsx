@@ -28,6 +28,7 @@ import { ISemester } from "@/types/semester";
 import { ISubjectAssignment } from "@/types/assignment";
 import { ITeacher } from "@/types/teacher";
 import { IClassRoutine, IRoom } from "@/types/routine";
+import { IAcademicSession } from "@/types/academicSession";
 
 interface Props {
     semesters: ISemester[];
@@ -36,6 +37,7 @@ interface Props {
     rooms: IRoom[];
     routines: IClassRoutine[];
     departmentName: string;
+    sessions?: IAcademicSession[];
 }
 
 export default function RoutineManagement({
@@ -45,6 +47,7 @@ export default function RoutineManagement({
     rooms,
     routines,
     departmentName,
+    sessions = [],
 }: Props) {
     const [selectedSemesterId, setSelectedSemesterId] = useState<string>(
         semesters[0]?.id ?? ""
@@ -212,6 +215,7 @@ export default function RoutineManagement({
                 teachers={teachers}
                 rooms={rooms}
                 defaultSemesterId={selectedSemesterId}
+                sessions={sessions}
             />
 
             {/* Official Print Modal */}

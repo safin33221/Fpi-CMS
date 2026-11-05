@@ -4,12 +4,13 @@ import { getAllSubjectAssignments } from "@/services/subject-assignment/getAllSu
 import { getDepartmentTeachers } from "@/services/staff/get-department-teachers";
 import { getAllRooms } from "@/services/room/getAllRooms";
 import { getRoutines } from "@/services/routine/getRoutines";
+import { getActiveAcademicSessions } from "@/services/academicSession/getActiveAcademicSessions";
 import { myProfile } from "@/services/user/my-profile";
 
 export const dynamic = "force-dynamic";
 
 export default async function RoutinePage() {
-    const [semesters, assignments, teachers, rooms, routines, userProfile] =
+    const [semesters, assignments, teachers, rooms, routines, userProfile, sessions] =
         await Promise.all([
             getAllSemester(),
             getAllSubjectAssignments(),
@@ -17,6 +18,7 @@ export default async function RoutinePage() {
             getAllRooms(),
             getRoutines(),
             myProfile(),
+            getActiveAcademicSessions(),
         ]);
 
     const departmentName =
@@ -30,6 +32,7 @@ export default async function RoutinePage() {
             rooms={rooms}
             routines={routines}
             departmentName={departmentName}
+            sessions={sessions}
         />
     );
 }

@@ -61,7 +61,7 @@ export default function EditAcademicSessionDialog({
             return;
         }
 
-        if (new Date(endDate) <= new Date(startDate)) {
+        if (startDate && endDate && new Date(endDate) <= new Date(startDate)) {
             setError("সমাপ্তির তারিখ অবশ্যই শুরুর তারিখের পরবর্তী হতে হবে");
             return;
         }
@@ -69,8 +69,8 @@ export default function EditAcademicSessionDialog({
         startTransition(async () => {
             const res = await updateAcademicSession(session.id, {
                 name: name.trim(),
-                startDate,
-                endDate,
+                startDate: startDate || undefined,
+                endDate: endDate || undefined,
                 isCurrent,
                 isActive,
             });
