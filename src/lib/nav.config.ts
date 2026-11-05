@@ -1,11 +1,9 @@
-
-
 import { UserRole } from "@/types/enum";
 import { getDefaultDashboard } from "./auth-utils";
 import { NavSection } from "@/types/nav-menu";
 
-
 const ALL_ROLES: UserRole[] = [
+    UserRole.PRINCIPAL,
     UserRole.ADMIN,
     UserRole.REGISTRAR,
     UserRole.DEPARTMENT_HEAD,
@@ -45,72 +43,93 @@ export const getTopNavItems = (
     ];
 };
 
-export const getBottomNavItems =
-    (): NavSection[] => {
-        return [
-            {
-                title: "Account",
-                items: [
-                    {
-                        title: "Profile",
-                        href: "/profile",
-                        icon: "User",
-                        roles: ALL_ROLES,
-                    },
-                    {
-                        title: "Settings",
-                        href: "/settings",
-                        icon: "Settings",
-                        roles: ALL_ROLES,
-                    },
-                    {
-                        title: "Change Password",
-                        href: "/change-password",
-                        icon: "Lock",
-                        roles: ALL_ROLES,
-                    },
-                ],
-            },
-        ];
-    };
+export const getBottomNavItems = (): NavSection[] => {
+    return [
+        {
+            title: "Settings & Account",
+            items: [
+                {
+                    title: "Profile",
+                    href: "/profile",
+                    icon: "User",
+                    roles: ALL_ROLES,
+                },
+                {
+                    title: "Settings",
+                    href: "/settings",
+                    icon: "Settings",
+                    roles: ALL_ROLES,
+                },
+                {
+                    title: "Change Password",
+                    href: "/change-password",
+                    icon: "Lock",
+                    roles: ALL_ROLES,
+                },
+            ],
+        },
+    ];
+};
 
 /* -------------------------------------------------------------------------- */
-/*                                   ADMIN                                    */
+/*                              ADMIN / PRINCIPAL                             */
 /* -------------------------------------------------------------------------- */
 
 export const adminNavItems: NavSection[] = [
     {
-        title: "Administration",
+        title: "Academic & Campus",
         items: [
             {
                 title: "Departments",
                 href: "/admin/dashboard/departments",
                 icon: "Building2",
-                roles: [UserRole.ADMIN],
+                roles: [UserRole.ADMIN, UserRole.PRINCIPAL],
             },
             {
-                title: "Subject",
+                title: "Subjects",
                 href: "/admin/dashboard/subjects",
-                icon: "Building2",
-                roles: [UserRole.ADMIN],
+                icon: "BookOpen",
+                roles: [UserRole.ADMIN, UserRole.PRINCIPAL],
             },
             {
-                title: "Employee",
+                title: "Academic Sessions",
+                href: "/admin/dashboard/academic-sessions",
+                icon: "CalendarRange",
+                roles: [UserRole.ADMIN, UserRole.PRINCIPAL],
+            },
+            {
+                title: "Rooms & Labs",
+                href: "/admin/dashboard/rooms",
+                icon: "DoorOpen",
+                roles: [UserRole.ADMIN, UserRole.PRINCIPAL],
+            },
+        ],
+    },
+    {
+        title: "Human Resources",
+        items: [
+            {
+                title: "Employees & Staff",
                 href: "/admin/dashboard/staff",
                 icon: "Users",
-                roles: [UserRole.ADMIN],
+                roles: [UserRole.ADMIN, UserRole.PRINCIPAL],
             },
+        ],
+    },
+    {
+        title: "Analytics & System",
+        items: [
             {
                 title: "Analytics",
                 href: "/admin/dashboard/analytics",
                 icon: "BarChart3",
-                roles: [UserRole.ADMIN],
+                roles: [UserRole.ADMIN, UserRole.PRINCIPAL],
             },
             {
                 title: "Reports",
                 href: "/admin/dashboard/reports",
                 icon: "FileBarChart",
-                roles: [UserRole.ADMIN],
+                roles: [UserRole.ADMIN, UserRole.PRINCIPAL],
             },
             {
                 title: "System Settings",
@@ -128,7 +147,7 @@ export const adminNavItems: NavSection[] = [
 
 export const registrarNavItems: NavSection[] = [
     {
-        title: "Student Affairs",
+        title: "Student Admissions",
         items: [
             {
                 title: "Admissions",
@@ -148,6 +167,11 @@ export const registrarNavItems: NavSection[] = [
                 icon: "Upload",
                 roles: [UserRole.REGISTRAR],
             },
+        ],
+    },
+    {
+        title: "Academic Records",
+        items: [
             {
                 title: "Registrations",
                 href: "/registrar/dashboard/registrations",
@@ -176,7 +200,7 @@ export const registrarNavItems: NavSection[] = [
 
 export const departmentHeadNavItems: NavSection[] = [
     {
-        title: "Department",
+        title: "Faculty & Students",
         items: [
             {
                 title: "Teachers",
@@ -190,6 +214,11 @@ export const departmentHeadNavItems: NavSection[] = [
                 icon: "GraduationCap",
                 roles: [UserRole.DEPARTMENT_HEAD],
             },
+        ],
+    },
+    {
+        title: "Curriculum & Routine",
+        items: [
             {
                 title: "Subjects",
                 href: "/department-head/dashboard/subjects",
@@ -199,6 +228,12 @@ export const departmentHeadNavItems: NavSection[] = [
             {
                 title: "Curriculum",
                 href: "/department-head/dashboard/curriculum",
+                icon: "FileSpreadsheet",
+                roles: [UserRole.DEPARTMENT_HEAD],
+            },
+            {
+                title: "Class Routine",
+                href: "/department-head/dashboard/routine",
                 icon: "CalendarDays",
                 roles: [UserRole.DEPARTMENT_HEAD],
             },
@@ -218,30 +253,35 @@ export const departmentHeadNavItems: NavSection[] = [
 
 export const teacherNavItems: NavSection[] = [
     {
-        title: "Academic",
+        title: "Classes & Schedule",
         items: [
             {
                 title: "My Classes",
-                href: "/teacher/classes",
+                href: "/teacher/dashboard/classes",
                 icon: "Presentation",
                 roles: [UserRole.TEACHER],
             },
             {
+                title: "Routine",
+                href: "/teacher/dashboard/routine",
+                icon: "CalendarDays",
+                roles: [UserRole.TEACHER],
+            },
+        ],
+    },
+    {
+        title: "Classroom Activities",
+        items: [
+            {
                 title: "Attendance",
-                href: "/teacher/attendance",
+                href: "/teacher/dashboard/attendance",
                 icon: "QrCode",
                 roles: [UserRole.TEACHER],
             },
             {
                 title: "Marks Entry",
-                href: "/teacher/marks",
+                href: "/teacher/dashboard/marks",
                 icon: "PenSquare",
-                roles: [UserRole.TEACHER],
-            },
-            {
-                title: "Routine",
-                href: "/teacher/routine",
-                icon: "CalendarDays",
                 roles: [UserRole.TEACHER],
             },
         ],
@@ -254,29 +294,34 @@ export const teacherNavItems: NavSection[] = [
 
 export const accountantNavItems: NavSection[] = [
     {
-        title: "Finance",
+        title: "Fee Collections",
         items: [
             {
                 title: "Fee Collection",
-                href: "/accountant/collections",
+                href: "/accountant/dashboard/collections",
                 icon: "Wallet",
                 roles: [UserRole.ACCOUNTANT],
             },
             {
                 title: "Student Dues",
-                href: "/accountant/dues",
+                href: "/accountant/dashboard/dues",
                 icon: "BadgeDollarSign",
                 roles: [UserRole.ACCOUNTANT],
             },
+        ],
+    },
+    {
+        title: "Accounts & Reports",
+        items: [
             {
                 title: "Transactions",
-                href: "/accountant/transactions",
+                href: "/accountant/dashboard/transactions",
                 icon: "Receipt",
                 roles: [UserRole.ACCOUNTANT],
             },
             {
                 title: "Reports",
-                href: "/accountant/reports",
+                href: "/accountant/dashboard/reports",
                 icon: "FileBarChart",
                 roles: [UserRole.ACCOUNTANT],
             },
@@ -350,35 +395,40 @@ export const librarianNavItems: NavSection[] = [
 
 export const studentNavItems: NavSection[] = [
     {
-        title: "Student Portal",
+        title: "Academic Portal",
         items: [
             {
-                title: "Attendance",
-                href: "/student/attendance",
-                icon: "ClipboardCheck",
-                roles: [UserRole.STUDENT],
-            },
-            {
                 title: "Routine",
-                href: "/student/routine",
+                href: "/student/dashboard/routine",
                 icon: "CalendarDays",
                 roles: [UserRole.STUDENT],
             },
             {
-                title: "Subjects",
-                href: "/student/subjects",
-                icon: "BookOpen",
+                title: "Attendance",
+                href: "/student/dashboard/attendance",
+                icon: "ClipboardCheck",
                 roles: [UserRole.STUDENT],
             },
             {
+                title: "Subjects",
+                href: "/student/dashboard/subjects",
+                icon: "BookOpen",
+                roles: [UserRole.STUDENT],
+            },
+        ],
+    },
+    {
+        title: "Records & Finance",
+        items: [
+            {
                 title: "Results",
-                href: "/student/results",
+                href: "/student/dashboard/results",
                 icon: "Award",
                 roles: [UserRole.STUDENT],
             },
             {
                 title: "Fees",
-                href: "/student/fees",
+                href: "/student/dashboard/fees",
                 icon: "Wallet",
                 roles: [UserRole.STUDENT],
             },
@@ -399,6 +449,7 @@ export const getNavItemsByRole = async (
     let roleItems: NavSection[] = [];
 
     switch (role) {
+        case "PRINCIPAL":
         case "ADMIN":
             roleItems = adminNavItems;
             break;
@@ -441,4 +492,3 @@ export const getNavItemsByRole = async (
         ...bottomItems,
     ];
 };
-

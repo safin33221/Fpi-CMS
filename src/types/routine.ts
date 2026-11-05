@@ -12,8 +12,10 @@ export type Weekday =
 
 export interface IRoom {
     id: string;
-    name: string;
-    code: string;
+    buildingName: string;
+    roomCode: string;
+    name?: string;
+    code?: string;
     capacity: number | null;
     isActive: boolean;
 }
@@ -26,4 +28,6 @@ export interface IClassRoutine {
     room: IRoom;
     teacher: ITeacher;
     subjectAssignment: ISubjectAssignment;
+    academicSessionId?: string;
+    isActive?: boolean;
 }

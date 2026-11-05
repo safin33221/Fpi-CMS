@@ -26,13 +26,26 @@ export const createRoutine = async (
         const result: { message?: string } = await response.json();
 
         if (!response.ok) {
-            return { success: false, message: result.message ?? "Could not save class routine" };
+            return {
+                success: false,
+                message: result.message ?? "Could not save class routine",
+            };
         }
 
         revalidatePath("/department-head/dashboard/curriculum");
-        return { success: true, message: result.message ?? "Class routine saved" };
+        revalidatePath("/department-head/dashboard/routine");
+        return {
+            success: true,
+            message: result.message ?? "Class routine saved successfully",
+        };
     } catch (error) {
         unstable_rethrow(error);
-        return { success: false, message: error instanceof Error ? error.message : "Could not save class routine" };
+        return {
+            success: false,
+            message:
+                error instanceof Error
+                    ? error.message
+                    : "Could not save class routine",
+        };
     }
 };

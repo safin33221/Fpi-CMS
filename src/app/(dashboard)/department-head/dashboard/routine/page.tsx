@@ -1,8 +1,35 @@
-"use client"
-import UnderDevelopment from "@/components/common/UnderDevelopment";
+import RoutineManagement from "@/components/module/departmentHead/routine/RoutineManagement";
+import { getAllSemester } from "@/services/semester/getAllSemester";
+import { getAllSubjectAssignments } from "@/services/subject-assignment/getAllSubjectAssignments";
+import { getDepartmentTeachers } from "@/services/staff/get-department-teachers";
+import { getAllRooms } from "@/services/room/getAllRooms";
+import { getRoutines } from "@/services/routine/getRoutines";
+import { myProfile } from "@/services/user/my-profile";
 
-export default function SettingsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function RoutinePage() {
+    const [semesters, assignments, teachers, rooms, routines, userProfile] =
+        await Promise.all([
+            getAllSemester(),
+            getAllSubjectAssignments(),
+            getDepartmentTeachers(),
+            getAllRooms(),
+            getRoutines(),
+            myProfile(),
+        ]);
+
+    const departmentName =
+        userProfile?.teacher?.department?.name ?? "Department";
+
     return (
-        <UnderDevelopment/>
+        <RoutineManagement
+            semesters={semesters}
+            assignments={assignments}
+            teachers={teachers}
+            rooms={rooms}
+            routines={routines}
+            departmentName={departmentName}
+        />
     );
 }

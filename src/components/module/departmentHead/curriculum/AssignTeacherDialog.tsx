@@ -117,6 +117,9 @@ function AssignTeacherForm({
         });
     };
 
+    const selectedAssignedTeacher = teachers.find((t) => t.id === teacherId);
+    const selectedAssignedRoom = rooms.find((r) => r.id === roomId);
+
     const handleSchedule = () => {
         if (!teacherId || !roomId || !startTime || !endTime) return;
         setMessage("");
@@ -133,7 +136,7 @@ function AssignTeacherForm({
 
     return (
         <>
-            <DialogContent>
+            <DialogContent className="sm:max-w-xl md:max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Subject Details</DialogTitle>
                     <DialogDescription>
@@ -188,7 +191,11 @@ function AssignTeacherForm({
                         onValueChange={(value) => setTeacherId(value ?? "")}
                     >
                         <SelectTrigger id="teacher" className="w-full">
-                            <SelectValue placeholder="Select a teacher" />
+                            <SelectValue placeholder="Select a teacher">
+                                {selectedAssignedTeacher
+                                    ? `${selectedAssignedTeacher.user.name} (${selectedAssignedTeacher.designation})`
+                                    : undefined}
+                            </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                             {teachers.map((teacher) => (
@@ -206,11 +213,19 @@ function AssignTeacherForm({
                     <Label>Add class schedule</Label>
                     <div className="grid gap-3 sm:grid-cols-2">
                         <Select value={roomId} onValueChange={(value) => setRoomId(value ?? "")}>
-                            <SelectTrigger className="w-full"><SelectValue placeholder="Select room" /></SelectTrigger>
-                            <SelectContent>{rooms.map((room) => <SelectItem key={room.id} value={room.id}>{room.code} — {room.name}</SelectItem>)}</SelectContent>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select room">
+                                    {selectedAssignedRoom
+                                        ? `${selectedAssignedRoom.roomCode || selectedAssignedRoom.code} — ${selectedAssignedRoom.buildingName || selectedAssignedRoom.name}`
+                                        : undefined}
+                                </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>{rooms.map((room) => <SelectItem key={room.id} value={room.id}>{room.roomCode || room.code} — {room.buildingName || room.name}</SelectItem>)}</SelectContent>
                         </Select>
                         <Select value={day} onValueChange={(value) => setDay((value ?? "SATURDAY") as Weekday)}>
-                            <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select day">{day}</SelectValue>
+                            </SelectTrigger>
                             <SelectContent>{["SATURDAY", "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"].map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent>
                         </Select>
                         <input type="time" value={startTime} onChange={(event) => setStartTime(event.target.value)} className="h-9 rounded-md border border-input bg-transparent px-3 text-sm" />
