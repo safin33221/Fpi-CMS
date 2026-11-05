@@ -248,7 +248,11 @@ export default function AddRoutineDialog({
                     <div className="flex items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive my-1">
                         <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
                         <div>
-                            <p className="font-bold text-sm">সময় সংঘর্ষ বা ত্রুটি (Scheduling Conflict)</p>
+                            <p className="font-bold text-sm">
+                                {errorMessage.toLowerCase().includes("conflict") || errorMessage.includes("সংঘর্ষ")
+                                    ? "সময় সংঘর্ষ (Scheduling Conflict)"
+                                    : "সতর্কতা বা ত্রুটি (Alert / Error)"}
+                            </p>
                             <p className="mt-1 text-xs sm:text-sm leading-relaxed">{errorMessage}</p>
                         </div>
                     </div>
