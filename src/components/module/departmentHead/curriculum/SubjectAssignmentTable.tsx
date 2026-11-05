@@ -48,7 +48,7 @@ export default function SubjectAssignmentTable({
 
             <ManagementTable
                 data={data}
-                columns={SubjectAssignmentColumns}
+                columns={SubjectAssignmentColumns({})}
                 getRowKey={(row) => row.id}
 
             />

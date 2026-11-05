@@ -1,4 +1,3 @@
-
 import { cookies } from "next/headers"
 const BackendURL = process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -22,6 +21,16 @@ const buildRequestUrl = (endpoint: string): string | null => {
     }
 }
 
+const isNextInternalError = (err: unknown): boolean => {
+    if (typeof err !== "object" || err === null || !("digest" in err)) {
+        return false;
+    }
+    const digest = (err as { digest?: unknown }).digest;
+    return (
+        typeof digest === "string" &&
+        (digest === "DYNAMIC_SERVER_USAGE" || digest.startsWith("NEXT_"))
+    );
+};
 
 const serverFetchHelper = async (
     endpoint: string,
@@ -45,18 +54,20 @@ const serverFetchHelper = async (
         )
     }
 
+    const cookieStore = await cookies();
+    const cookieHeader = cookieStore.toString();
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+        controller.abort();
+    }, 15000);
+
     try {
-        const cookieStore = await cookies();
-
-        const controller = new AbortController();
-
-        const timeout = setTimeout(() => {
-            controller.abort();
-        }, 15000);
-
         const headers = new Headers(options.headers);
 
-        headers.set("Cookie", cookieStore.toString());
+        if (cookieHeader) {
+            headers.set("Cookie", cookieHeader);
+        }
 
         if (!(options.body instanceof FormData)) {
             headers.set(
@@ -72,18 +83,24 @@ const serverFetchHelper = async (
             cache: "no-store",
         });
 
-        clearTimeout(timeout)
+        clearTimeout(timeout);
 
         if (allowRetry && response.status >= 500) {
-            return serverFetchHelper(endpoint, options, false)
+            return serverFetchHelper(endpoint, options, false);
         }
 
-        return response
+        return response;
     } catch (error) {
-        console.error("Server fetch failed:", error)
+        clearTimeout(timeout);
+
+        if (isNextInternalError(error)) {
+            throw error;
+        }
+
+        console.error("Server fetch failed:", error);
 
         if (allowRetry) {
-            return serverFetchHelper(endpoint, options, false)
+            return serverFetchHelper(endpoint, options, false);
         }
 
         return new Response(
@@ -100,7 +117,7 @@ const serverFetchHelper = async (
                     "Content-Type": "application/json",
                 },
             }
-        )
+        );
     }
 }
 

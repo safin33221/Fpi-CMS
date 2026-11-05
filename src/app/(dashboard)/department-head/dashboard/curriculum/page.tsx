@@ -4,14 +4,20 @@ import CurriculumManagement from "@/components/module/departmentHead/curriculum/
 import { getAllSemester } from "@/services/semester/getAllSemester";
 import { getAllSubjects } from "@/services/subject";
 import { getAllSubjectAssignments } from "@/services/subject-assignment/getAllSubjectAssignments";
+import { getDepartmentTeachers } from "@/services/staff/get-department-teachers";
+import { getAllRooms } from "@/services/room/getAllRooms";
+import { getRoutines } from "@/services/routine/getRoutines";
 
 
 export default async function Page() {
-    const [semesters, subjects, assignments] =
+    const [semesters, subjects, assignments, teachers, rooms, routines] =
         await Promise.all([
             getAllSemester(),
             getAllSubjects(),
             getAllSubjectAssignments(),
+            getDepartmentTeachers(),
+            getAllRooms(),
+            getRoutines(),
         ]);
 
     return (
@@ -64,6 +70,9 @@ export default async function Page() {
                 semesters={semesters}
                 subjects={subjects}
                 assignments={assignments}
+                teachers={teachers}
+                rooms={rooms}
+                routines={routines}
             />
         </div>
     );

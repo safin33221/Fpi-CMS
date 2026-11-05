@@ -3,6 +3,7 @@ import {
     Building2,
     GraduationCap,
     UserRound,
+    Eye,
 } from "lucide-react";
 
 import { columns } from "@/components/shared/ManagementTable";
@@ -11,7 +12,13 @@ import { Badge } from "@/components/ui/badge";
 
 import { ISubjectAssignment } from "@/types/assignment";
 
-export const SubjectAssignmentColumns: columns<ISubjectAssignment>[] = [
+type SubjectAssignmentColumnsProps = {
+    onViewDetails?: (assignment: ISubjectAssignment) => void;
+};
+
+export const SubjectAssignmentColumns = ({
+    onViewDetails,
+}: SubjectAssignmentColumnsProps): columns<ISubjectAssignment>[] => [
     {
         header: "Subject",
         accessor: (assignment) => (
@@ -142,10 +149,18 @@ export const SubjectAssignmentColumns: columns<ISubjectAssignment>[] = [
 
     {
         header: "Actions",
-        accessor: () => (
-            <div className="flex items-center gap-2">
-                {/* DropdownMenu / RowActions */}
-            </div>
-        ),
+        accessor: (assignment) =>
+            onViewDetails ? (
+                <div className="flex items-center gap-2">
+                    <button
+                        type="button"
+                        onClick={() => onViewDetails(assignment)}
+                        className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
+                    >
+                        <Eye className="h-4 w-4" />
+                        Details
+                    </button>
+                </div>
+            ) : null,
     },
 ];
